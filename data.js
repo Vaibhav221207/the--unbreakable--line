@@ -31,13 +31,13 @@ const ERA_DATA = [
     // rot in degrees (rotation follows arch curve tangent)
     // type: "base" | "pillar" | "curved" | "keystone" — controls CSS shape + quarry preview
     pieces: [
-      { id: "base-l",    icon: "", label: "Heavy Base",     slot: "s0",  x: 16,  y: 83, w: 21, h: 17, rot: 0,   type: "base" },
-      { id: "base-r",    icon: "", label: "Heavy Base",     slot: "s3",  x: 84,  y: 83, w: 21, h: 17, rot: 0,   type: "base" },
-      { id: "supp-l",    icon: "", label: "Straight Pillar", slot: "s1",  x: 26,  y: 57, w: 11, h: 28, rot: 0,   type: "pillar" },
-      { id: "supp-r",    icon: "", label: "Straight Pillar", slot: "s4",  x: 74,  y: 57, w: 11, h: 28, rot: 0,   type: "pillar" },
-      { id: "arch-l",    icon: "", label: "Curved Stone",    slot: "s2",  x: 40,  y: 36, w: 14, h: 20, rot: -32, type: "curved" },
-      { id: "arch-r",    icon: "", label: "Curved Stone",    slot: "s5",  x: 60,  y: 36, w: 14, h: 20, rot: 32,  type: "curved" },
-      { id: "keystone",  icon: "", label: "Wedge Keystone",  slot: "s6",  x: 50,  y: 14, w: 18, h: 17, rot: 0,   type: "keystone" }
+      { id: "base-l",    icon: "", label: "Heavy Base",     slot: "s0",  x: 14,  y: 91, w: 28, h: 18, rot: 0,   type: "base" },
+      { id: "base-r",    icon: "", label: "Heavy Base",     slot: "s3",  x: 86,  y: 91, w: 28, h: 18, rot: 0,   type: "base" },
+      { id: "supp-l",    icon: "", label: "Straight Pillar", slot: "s1",  x: 24,  y: 66, w: 12, h: 32, rot: 0,   type: "pillar" },
+      { id: "supp-r",    icon: "", label: "Straight Pillar", slot: "s4",  x: 76,  y: 66, w: 12, h: 32, rot: 0,   type: "pillar" },
+      { id: "arch-l",    icon: "", label: "Curved Stone",    slot: "s2",  x: 37,  y: 38, w: 16, h: 26, rot: -30, type: "curved" },
+      { id: "arch-r",    icon: "", label: "Curved Stone",    slot: "s5",  x: 63,  y: 38, w: 16, h: 26, rot: 30,  type: "curved" },
+      { id: "keystone",  icon: "", label: "Wedge Keystone",  slot: "s6",  x: 50,  y: 12, w: 26, h: 22, rot: 0,   type: "keystone" }
     ],
     order: ["base-l", "base-r", "supp-l", "supp-r", "arch-l", "arch-r", "keystone"],
     hints: {
@@ -121,7 +121,85 @@ The machine didn't deliberate. It didn't weigh beauty against durability. It sim
 But what happens when there is <em>no optimal answer</em>?<br><br>
 <span style="color:#c08050">The machine can match. Only the builder can imagine.</span>`
     }
+  },
+// ────────────────────────────────────────────────────────
+// Era 3 — The Machine Age (balanced cantilever bridge sliders)
+// ────────────────────────────────────────────────────────
+{
+  id: 3,
+  label: "The Machine Age",
+  icon: "🏗️",
+  puzzleType: "balance",
+  intro: {
+    title: "The Unbreakable Boundary",
+    subtitle: "Six eras. One builder. A line machines cannot cross.",
+    lines: [
+      "Steam and steel. Gears and girders. The age of machines has arrived.",
+      "But every crane still needs a human hand to find its balance."
+    ],
+    btn: "Enter the Machine Shop"
+  },
+  narrative: {
+    scene: "A river gorge waits to be crossed. A cantilever bridge — the most daring design of the Machine Age — will span the gap. But each arm must grow in perfect balance from the pier, or the entire structure will topple into the gorge below.",
+    quest: "Extend the left and right cantilever arms using the sliders. Keep them balanced as you build toward the far banks."
+  },
+  scenarios: [
+    {
+      id: "l1",
+      title: "Even Span",
+      desc: "Equal loads — find the balanced extension",
+      icon: "🏗️",
+      leftArm: { load: 5, max: 40 },
+      rightArm: { load: 4, max: 50 },
+      target: { left: 20, right: 25 },
+      tolerance: 2
+    },
+    {
+      id: "l2",
+      title: "Heavy Side",
+      desc: "One arm carries heavier steel sections",
+      icon: "🔩",
+      leftArm: { load: 6, max: 40 },
+      rightArm: { load: 3, max: 60 },
+      target: { left: 15, right: 30 },
+      tolerance: 2
+    },
+    {
+      id: "l3",
+      title: "River Crossing",
+      desc: "A wide span over deep water",
+      icon: "🌊",
+      leftArm: { load: 4, max: 50 },
+      rightArm: { load: 5, max: 40 },
+      target: { left: 25, right: 20 },
+      tolerance: 2
+    },
+    {
+      id: "l4",
+      title: "Precision Alignment",
+      desc: "Tight tolerance — misalignment means collapse",
+      icon: "⚙️",
+      leftArm: { load: 3, max: 60 },
+      rightArm: { load: 4, max: 50 },
+      target: { left: 28, right: 21 },
+      tolerance: 2
+    }
+  ],
+  celebration: {
+    title: "The Cantilever Holds! 🌉",
+    text: "Arm by arm, the bridge reaches across the gorge. The steel work is true, the balance perfect. But on the opposite bank, a machine watches — and calculates.",
+    emoji: "🎉🌉🔩",
+    btn: "Automate It →"
+  },
+  automation: {
+    intro: "A robotic gantry glides along the pier. With mechanical precision, it calculates the exact moment required on each side and slides the cantilever arms to their optimal extensions.",
+    speed: 80,
+    message: `<strong>Cantilever balance computation complete.</strong> 0.24 seconds per arm.<br><br>
+The machine solved the equilibrium equation — load × distance, a simple product.<br><br>
+But what happens when the wind gust hits, the load shifts, or the steel expands in the heat?<br><br>
+<span style="color:#6a8aaa">The machine calculates. Only the builder adapts.</span>`
   }
+}
 ];
 
 window.ERA_DATA = ERA_DATA;

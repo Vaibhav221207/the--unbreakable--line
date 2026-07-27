@@ -16,10 +16,12 @@ const Game = (() => {
   // ---- Screen Rendering ---- //
   function render(html) { app.innerHTML = html; }
   function append(html) { app.insertAdjacentHTML("beforeend", html); }
+  function appendToBody(html) { document.body.insertAdjacentHTML("beforeend", html); }
 
   // ---- Module Shorthand ---- //
   const PE = PuzzleEngine;
   const ME = MatchingEngine;
+  const BE = BalanceEngine;
   const UI = UIRenderer;
 
   // ---- Navigation Functions (exposed on window for inline onclick) ---- //
@@ -33,6 +35,10 @@ const Game = (() => {
       launchConveyorPuzzle();
       return;
     }
+    if (currentEra.puzzleType === "balance") {
+      launchBalancePuzzle();
+      return;
+    }
     state = PE.createState(currentEra);
     render(UI.renderPuzzle(currentEra));
     UI.syncPicker(currentEra, state);
@@ -43,9 +49,11 @@ const Game = (() => {
   function showAutomation() {
     const cel = $("celebration");
     if (cel) cel.remove();
-    append(UI.renderAutomation(currentEra));
+    appendToBody(UI.renderAutomation(currentEra));
     if (currentEra.puzzleType === "matching") {
       UI.runMatchingAutomation(currentEra);
+    } else if (currentEra.puzzleType === "balance") {
+      UI.runBalanceAutomation(currentEra);
     } else {
       UI.runAutomationTimeline(currentEra);
     }
@@ -100,7 +108,7 @@ const Game = (() => {
     UI.syncProgress(state);
     UI.clearHint();
     if (PE.isComplete(state)) {
-      setTimeout(() => append(UI.renderCelebration(currentEra)), 400);
+      setTimeout(() => appendToBody(UI.renderCelebration(currentEra)), 400);
     }
   }
 
@@ -137,8 +145,25 @@ const Game = (() => {
 
     if (ME.isComplete(state)) {
       UI.stopConveyorBelt();
-      setTimeout(() => append(UI.renderCelebration(currentEra)), 600);
+      setTimeout(() => appendToBody(UI.renderCelebration(currentEra)), 600);
     }
+  }
+
+  // ---- Era 3: Balance Puzzle (lever/slider controls) ---- //
+
+  function launchBalancePuzzle() {
+    state = BE.createState(currentEra);
+    render(UI.renderBalancePuzzle(currentEra));
+    UI.showHint("⬅️ Adjust the levers to balance the crane");
+    UI.startBalanceGame(currentEra, state, {
+      onComplete: handleBalanceComplete
+    });
+  }
+
+  function handleBalanceComplete() {
+    UI.stopBalanceGame();
+    UI.showHint("✅ All lifts balanced!");
+    setTimeout(() => appendToBody(UI.renderCelebration(currentEra)), 500);
   }
 
   // ---- Touch Support (Era 1) ---- //
@@ -168,19 +193,54 @@ const Game = (() => {
 
   // ---- Init, Next Era & Restart ---- //
 
+  function showDevBar() {
+    const existing = document.getElementById("dev-bar");
+    if (existing) existing.remove();
+    const bar = document.createElement("div");
+    bar.id = "dev-bar";
+    bar.innerHTML = ERA_DATA.map(e =>
+      `<button class="dev-btn" data-era="${e.id}">${e.icon} ${e.id}</button>`
+    ).join("") + `<button class="dev-btn dev-close" id="dev-close">✕</button>`;
+    Object.assign(bar.style, {
+      position: "fixed", bottom: "6px", left: "50%", transform: "translateX(-50%)",
+      zIndex: "9999", display: "flex", gap: "4px", padding: "4px 8px",
+      background: "rgba(0,0,0,0.7)", borderRadius: "6px",
+      border: "1px solid rgba(255,255,255,0.1)", backdropFilter: "blur(4px)"
+    });
+    document.body.appendChild(bar);
+    bar.querySelectorAll(".dev-btn:not(.dev-close)").forEach(btn => {
+      btn.onclick = () => jumpToEra(parseInt(btn.dataset.era));
+    });
+    document.getElementById("dev-close").onclick = () => bar.remove();
+  }
+
+  function jumpToEra(idx) {
+    const index = ERA_DATA.findIndex(e => e.id === idx);
+    if (index < 0) return;
+    eraIndex = index;
+    currentEra = ERA_DATA[eraIndex];
+    state = null;
+    touchSelected = null;
+    updateTheme();
+    render(UI.renderIntro(currentEra));
+  }
+
   function init() {
     eraIndex = 0;
     currentEra = ERA_DATA[eraIndex];
     state = null;
     updateTheme();
     render(UI.renderIntro(currentEra));
+    showDevBar();
   }
 
   // ---- Theme switching ---- //
   function updateTheme() {
-    document.body.classList.remove("era-stone", "era-industrial");
+    document.body.classList.remove("era-stone", "era-industrial", "era-machine");
     if (currentEra && currentEra.id === 2) {
       document.body.classList.add("era-industrial");
+    } else if (currentEra && currentEra.id === 3) {
+      document.body.classList.add("era-machine");
     }
   }
 
