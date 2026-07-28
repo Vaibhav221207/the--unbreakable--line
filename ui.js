@@ -4,6 +4,8 @@
  */
 const UIRenderer = (() => {
   const $ = id => document.getElementById(id);
+  const BPE = BlueprintEngine;
+  const PR = PrintEngine;
 
   // ---- Screen Templates ---- //
 
@@ -12,7 +14,8 @@ const UIRenderer = (() => {
     const shapeSets = {
       1: ["rock","spark","leaf","rock","spark","leaf"],
       2: ["gear","bolt","smoke","gear","rivet","bolt"],
-      3: ["beam","hex","dot","beam","hex","dot"]
+      3: ["beam","hex","dot","beam","hex","dot"],
+      5: ["dot","hex","spark","dot","hex","spark"]
     };
     const pool = shapeSets[era.id] || shapeSets[1];
     const cols = 4, rows = 3;
@@ -192,8 +195,14 @@ const UIRenderer = (() => {
           <div class="machine-scene" id="auto-scene-label">Level 1 / ${era.scenarios.length}</div>
           <div class="lever-panel" id="auto-lever-panel">${leverHtml}</div>
           <div class="auto-status machine-status" id="auto-status">Mechanical calibration initiated…</div>
-          <div class="auto-msg machine-msg" id="auto-msg">${era.automation.message}</div>
-          <button class="btn btn-sm btn-steel" id="auto-finish" onclick="Game.finishEra()">See what comes next →</button>
+          <div class="auto-banner" id="auto-banner">
+            <div class="auto-banner-inner">
+              <div class="auto-banner-icon">⚖️</div>
+              <div class="auto-banner-title">Cantilever Balance Complete</div>
+              <div class="auto-banner-msg">${era.automation.message}</div>
+              <button class="btn btn-ghost" onclick="Game.finishEra()">See what comes next →</button>
+            </div>
+          </div>
         </div>
       </div>`;
     }
@@ -265,9 +274,70 @@ const UIRenderer = (() => {
             <div class="base-light"></div>
           </div>
         </div>
-        <div class="auto-msg" id="auto-msg" style="display:none">${era.automation.message}</div>
-        <button class="btn btn-sm btn-ghost" id="auto-finish" style="display:none;margin-top:16px" onclick="Game.finishEra()">See what comes next →</button>
+        <div class="auto-banner" id="auto-banner">
+          <div class="auto-banner-inner">
+            <div class="auto-banner-icon">⚙️</div>
+            <div class="auto-banner-title">Material Sorting Complete</div>
+            <div class="auto-banner-msg">${era.automation.message}</div>
+            <button class="btn btn-ghost" onclick="Game.finishEra()">See what comes next →</button>
+          </div>
+        </div>
       </div>`;
+    }
+    // Blueprint puzzle automation (Era 4+)
+    if (era.puzzleType === "blueprint") {
+      return `<div class="auto-page show" id="auto-page">
+        <div class="auto-scene-top">
+          <div class="auto-timer" style="color:#80d0f0">
+            <span class="auto-timer-num" id="auto-timer">0.0</span><span class="auto-timer-unit">SECONDS</span>
+            <div class="auto-timer-label">elapsed</div>
+          </div>
+          <div class="auto-scene-characters">
+            <div class="auto-worker">
+              <div class="auto-worker-hat"></div>
+              <div class="auto-worker-head"></div>
+              <div class="auto-worker-body"></div>
+            </div>
+            <div class="auto-arrow"><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div></div>
+            <div class="auto-robot">
+              <div class="auto-robot-head">
+                <div class="auto-robot-antenna"></div>
+                <div class="auto-robot-eye left"></div>
+                <div class="auto-robot-eye right"></div>
+                <div class="auto-robot-mouth"></div>
+              </div>
+              <div class="auto-robot-body"></div>
+              <div class="auto-robot-arm left"></div>
+              <div class="auto-robot-arm right"></div>
+              <div class="auto-robot-wheel left"></div>
+              <div class="auto-robot-wheel right"></div>
+              <div class="auto-robot-shadow"></div>
+            </div>
+          </div>
+          <div class="era-badge" style="background:linear-gradient(135deg,#1a3a5a,#0a2a4a);border-color:rgba(80,180,240,0.3);color:#80d0f0">
+            <span>💻</span> The Age of CAD</div>
+          <div class="speed-tag" style="background:linear-gradient(135deg,#1a3a5a,#0a2a4a);border-color:rgba(80,180,240,0.2);color:#80d0f0">
+            ⏱ ${era.automation.speed}ms per test — 12 combos brute-forced</div>
+        </div>
+        <p class="narrative auto-narr">${era.automation.intro}</p>
+        <div class="bp-terminal" id="bp-terminal">
+          <div class="bp-term-header"><span class="bp-term-dot r"></span><span class="bp-term-dot y"></span><span class="bp-term-dot g"></span><span class="bp-term-title">cad_sim.exe</span></div>
+          <div class="bp-term-body" id="bp-term-body"></div>
+          <div class="bp-term-cursor" id="bp-term-cursor">_</div>
+        </div>
+        <div class="auto-banner" id="auto-banner">
+          <div class="auto-banner-inner">
+            <div class="auto-banner-icon">💻</div>
+            <div class="auto-banner-title">Optimal Design Found</div>
+            <div class="auto-banner-msg">${era.automation.message}</div>
+            <button class="btn btn-ghost" onclick="Game.finishEra()">See what comes next →</button>
+          </div>
+        </div>
+      </div>`;
+    }
+    // Print puzzle automation (Era 5+)
+    if (era.puzzleType === "print") {
+      return renderPrintAutomation(era);
     }
     // Sequencing puzzle automation (Era 1)
     const slotHtml = era.pieces.map(p => {
@@ -312,8 +382,14 @@ const UIRenderer = (() => {
       <p class="narrative auto-narr">${era.automation.intro}</p>
       <div class="arch-stage auto-arch">${slotHtml}</div>
       <div class="auto-status" id="auto-status">Cold steel begins to move…</div>
-      <div class="auto-msg" id="auto-msg" style="display:none">${era.automation.message}</div>
-      <button class="btn btn-sm btn-ghost" id="auto-finish" style="display:none;margin-top:16px" onclick="Game.finishEra()">See what comes next →</button>
+      <div class="auto-banner" id="auto-banner">
+        <div class="auto-banner-inner">
+          <div class="auto-banner-icon">🧱</div>
+          <div class="auto-banner-title">Arch Assembly Complete</div>
+          <div class="auto-banner-msg">${era.automation.message}</div>
+          <button class="btn btn-ghost" onclick="Game.finishEra()">See what comes next →</button>
+        </div>
+      </div>
     </div>`;
   }
 
@@ -415,12 +491,10 @@ const UIRenderer = (() => {
           status.style.color = "#4ade80";
         }
         setTimeout(() => {
-          const msg = $("auto-msg");
-          if (msg) msg.style.display = "block";
-          const btn = $("auto-finish");
-          if (btn) btn.style.display = "inline-flex";
+          const banner = $("auto-banner");
+          if (banner) banner.style.display = "flex";
           if (onDone) onDone();
-        }, 1200);
+        }, 1500);
         return;
       }
 
@@ -788,8 +862,8 @@ const UIRenderer = (() => {
 
     function showMsgAndBtn() {
       if (timerRaf) cancelAnimationFrame(timerRaf);
-      const m = document.getElementById("auto-msg"); if (m) m.style.display = "block";
-      const b = document.getElementById("auto-finish"); if (b) b.style.display = "inline-flex";
+      const banner = document.getElementById("auto-banner");
+      if (banner) banner.style.display = "flex";
     }
 
     function updateTimer() {
@@ -852,7 +926,7 @@ const UIRenderer = (() => {
       if (step >= steps.length) {
         const elapsed = ((performance.now() - timerStart) / 1000).toFixed(1);
         setStatus("✅ All cantilever spans balanced in " + elapsed + " seconds.", "#4ade80");
-        setTimeout(showMsgAndBtn, 800);
+        setTimeout(showMsgAndBtn, 1200);
         return;
       }
 
@@ -918,9 +992,9 @@ const UIRenderer = (() => {
         if (t < 1) {
           requestAnimationFrame(animateSlider);
         } else {
-          setStatus(`✅ ${sc.title} — balanced at ${Math.round(end)}m`, "#4ade80");
-          step++;
-          setTimeout(() => doStep(), 600);
+        setStatus(`✅ ${sc.title} — balanced at ${Math.round(end)}m`, "#4ade80");
+        step++;
+        setTimeout(() => doStep(), 900);
         }
       }
       requestAnimationFrame(animateSlider);
@@ -1186,8 +1260,8 @@ const UIRenderer = (() => {
     }
     function showMsgAndBtn() {
       if (timerRaf) cancelAnimationFrame(timerRaf);
-      const m = document.getElementById("auto-msg"); if (m) m.style.display = "block";
-      const b = document.getElementById("auto-finish"); if (b) b.style.display = "inline-flex";
+      const banner = document.getElementById("auto-banner");
+      if (banner) banner.style.display = "flex";
     }
 
     function updateTimer() {
@@ -1205,7 +1279,7 @@ const UIRenderer = (() => {
         setTimeout(() => { arm.style.display = "none"; }, 400);
         const elapsed = ((performance.now() - timerStart) / 1000).toFixed(1);
         setStatus("✅ All materials sorted in " + elapsed + " seconds.", "#4ade80");
-        setTimeout(showMsgAndBtn, 800);
+        setTimeout(showMsgAndBtn, 1200);
         return;
       }
 
@@ -1299,6 +1373,518 @@ const UIRenderer = (() => {
     setTimeout(doStep, 400);
   }
 
+  // ================================================================
+  //  BLUEPRINT SIMULATOR — toggle parameters + simulation (Era 4+)
+  // ================================================================
+
+  function renderBlueprintPuzzle(era, state) {
+    const sc = BPE.getScenario(state, era);
+    if (!sc) return "<div>No scenario</div>";
+
+    function paramRow(param) {
+      const sels = BPE.getSelections(state, sc.id);
+      const current = sels[param.id] || "";
+      return `<div class="bp-param">
+        <label class="bp-param-label">${param.label}</label>
+        <div class="bp-toggle-group">${param.options.map(o =>
+          `<button class="bp-toggle${current === o.id ? " active" : ""}"
+            data-param="${param.id}" data-value="${o.id}"
+            onclick="Game.onBlueprintParam('${sc.id}','${param.id}','${o.id}')">${o.label}</button>`
+        ).join("")}</div>
+      </div>`;
+    }
+
+    return `<div class="screen active">
+      ${floatingHTML(era)}
+      <div class="era-badge" style="background:linear-gradient(135deg,#1a2a4a,#0a1a3a);border-color:rgba(80,180,240,0.3);color:#80d0f0">
+        <span>${era.icon}</span> Era ${era.id} — ${era.label}</div>
+      <h2>${sc.icon} ${sc.title}</h2>
+      <p class="subtitle" style="color:#70a0c0">${sc.desc}</p>
+      <div id="bp-sim-area" class="bp-sim-area">
+        <div class="bp-structure" id="bp-structure">
+          <div class="bp-ground"></div>
+          <div class="bp-building" id="bp-building">
+            <div class="bp-floor"></div>
+            <div class="bp-floor"></div>
+            <div class="bp-floor"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bp-params">${era.params.map(paramRow).join("")}</div>
+      <button class="btn bp-run-btn" onclick="Game.onBlueprintSimulate()" id="bp-run-btn" disabled>▶ Run Simulation</button>
+      <div class="hint-bar" id="hint-bar"></div>
+      <div class="bp-result" id="bp-result"></div>
+    </div>`;
+  }
+
+  function showBlueprintSuccess(era, state, scenario, isLast) {
+    const resultEl = $("bp-result");
+    const runBtn = $("bp-run-btn");
+    const bld = $("bp-building");
+    if (resultEl) {
+      resultEl.innerHTML = `<div class="bp-success">
+        <div class="bp-success-icon">✅</div>
+        <div class="bp-success-text">${scenario.successText}</div>
+        <button class="btn bp-next-btn" onclick="Game.onBlueprintNext()">
+          ${isLast ? "🏁 All Tests Passed!" : "Next Hazard →"}
+        </button>
+      </div>`;
+    }
+    if (bld) {
+      bld.classList.add("bp-shake");
+      setTimeout(() => bld.classList.remove("bp-shake"), 1200);
+    }
+    if (runBtn) runBtn.style.display = "none";
+  }
+
+  function showBlueprintFailure(era, state, scenario, errorParams) {
+    const resultEl = $("bp-result");
+    const simArea = $("bp-sim-area");
+    const runBtn = $("bp-run-btn");
+    const bld = $("bp-building");
+    const hints = scenario.failureHints;
+    const errorList = errorParams.map(ep => {
+      const param = era.params.find(p => p.id === ep);
+      return `<div class="bp-error"><span class="bp-error-label">${param ? param.label : ep}:</span> ${hints[ep] || "Not suitable."}</div>`;
+    }).join("");
+
+    // Hide run button during retry state
+    if (runBtn) runBtn.style.display = "none";
+
+    // Show error details below
+    if (resultEl) {
+      resultEl.innerHTML = `<div class="bp-failure">
+        <div class="bp-failure-icon">💥</div>
+        <div class="bp-failure-title">Structure Failed</div>
+        <div class="bp-errors">${errorList}</div>
+      </div>`;
+    }
+
+    // Show retry overlay on the simulation area
+    if (simArea) {
+      const overlay = document.createElement("div");
+      overlay.className = "bp-retry-overlay";
+      overlay.innerHTML = `<button class="btn bp-retry-btn" onclick="Game.onBlueprintRetry()">↻ Retry</button>`;
+      simArea.style.position = "relative";
+      simArea.appendChild(overlay);
+    }
+
+    // Scroll result into view so error details are visible
+    if (resultEl) resultEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+    // Animate failure based on first error
+    if (bld) {
+      bld.classList.remove("bp-shake", "bp-sway", "bp-crack");
+      if (errorParams[0] === "foundation") bld.classList.add("bp-crack");
+      else if (errorParams[0] === "bracing") bld.classList.add("bp-sway");
+      else bld.classList.add("bp-crack");
+      setTimeout(() => bld.classList.remove("bp-crack", "bp-sway"), 2000);
+    }
+    // Highlight incorrect toggles
+    document.querySelectorAll(".bp-toggle").forEach(btn => {
+      const p = btn.dataset.param;
+      if (errorParams.includes(p)) btn.classList.add("bp-toggle-error");
+      else btn.classList.remove("bp-toggle-error");
+    });
+  }
+
+  function runBlueprintAutomation(era) {
+    const comboList = [];
+    for (const f of era.params[0].options) {
+      for (const b of era.params[1].options) {
+        for (const m of era.params[2].options) {
+          comboList.push({ foundation: f.id, bracing: b.id, material: m.id });
+        }
+      }
+    }
+    // Shuffle for variety
+    for (let i = comboList.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [comboList[i], comboList[j]] = [comboList[j], comboList[i]];
+    }
+
+    const correctCombos = [
+      { foundation:"deep", bracing:"cross", material:"flexible" },
+      { foundation:"deep", bracing:"diagonal", material:"rigid" }
+    ];
+
+    const timerEl = $("auto-timer");
+    const termBody = $("bp-term-body");
+    const termCursor = $("bp-term-cursor");
+    const banner = $("auto-banner");
+    let step = 0;
+    const startTime = performance.now();
+
+    if (timerEl) timerEl.textContent = "0.0";
+    if (termBody) termBody.innerHTML = "";
+    if (banner) banner.style.display = "none";
+
+    function updateTimer() {
+      if (!timerEl) return;
+      const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+      timerEl.textContent = elapsed;
+      if (step < comboList.length || !banner || banner.style.display === "none") requestAnimationFrame(updateTimer);
+    }
+    updateTimer();
+
+    function addLine(text, cls) {
+      if (!termBody) return;
+      const line = document.createElement("div");
+      line.className = "bp-term-line " + (cls || "");
+      line.textContent = text;
+      termBody.appendChild(line);
+      termBody.scrollTop = termBody.scrollHeight;
+    }
+
+    const interval = setInterval(() => {
+      if (step >= comboList.length) {
+        clearInterval(interval);
+        const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+        addLine(`─── SWEEP COMPLETE: ${elapsed}s ───`, "bp-term-dim");
+        addLine("2 optimal configurations found.", "bp-term-success");
+        if (termCursor) termCursor.style.display = "none";
+        setTimeout(() => {
+          if (banner) banner.style.display = "flex";
+        }, 1000);
+        return;
+      }
+
+      const c = comboList[step];
+      const isCorrect = correctCombos.some(cl =>
+        cl.foundation === c.foundation && cl.bracing === c.bracing && cl.material === c.material
+      );
+      const label = `${c.foundation} + ${c.bracing} + ${c.material}`;
+      addLine(`> ${label.padEnd(22)} ${isCorrect ? "✓ PASS" : "✗ FAIL"}`, isCorrect ? "bp-term-pass" : "bp-term-fail");
+      step++;
+    }, era.automation.speed || 8);
+  }
+
+  // ================================================================
+  //  PRINT PUZZLE — Material Synthesizer + 3D Printer (Era 5+)
+  // ================================================================
+
+  function renderPrintPuzzle(era, state) {
+    const sc = PR.getScenario(state, era);
+    if (!sc) return "<div>No scenario</div>";
+    const ch = PR.getChamber(state, sc.id);
+
+    const ingHtml = era.ingredients.map(ing =>
+      `<div class="pr-ingredient" draggable="true"
+        ondragstart="Game.onPrintDragStart(event,'${ing.id}')"
+        ondragend="Game.onPrintDragEnd()"
+        onclick="Game.onPrintIngredientTap('${ing.id}')"
+        data-id="${ing.id}">
+        <span class="pr-ing-icon">${ing.icon}</span>
+        <span class="pr-ing-label">${ing.label}</span>
+      </div>`
+    ).join("");
+
+    const chamberContents = ch.ingredients.length === 0
+      ? `<div class="pr-chamber-placeholder">Drop ingredients here</div>`
+      : ch.ingredients.map(id => {
+          const ing = era.ingredients.find(i => i.id === id);
+          return ing ? `<span class="pr-chamber-item">${ing.icon}</span>` : "";
+        }).join("");
+
+    const materialHtml = ch.material
+      ? `<div class="pr-material-sample">${ch.material.icon}<span>${ch.material.label}</span></div>`
+      : "";
+
+    const materialColor = ch.material ? ({
+      lightweight_composite: "#60d0b0",
+      flexible_polymer: "#c070e0",
+      standard_concrete: "#90a0a0"
+    }[ch.material.id] || "#70e0c0") : "#70e0c0";
+
+    const patternHtml = era.patterns.map(p =>
+      `<div class="pr-swatch${ch.pattern === p.id ? " active" : ""}"
+        onclick="Game.onPrintPattern('${sc.id}','${p.id}')" data-icon="${p.icon}">
+        <span class="pr-swatch-icon">${p.icon}</span>
+        <span class="pr-swatch-label">${p.label}</span>
+      </div>`
+    ).join("");
+
+    return `<div class="screen active">
+      ${floatingHTML(era)}
+      <div class="era-badge" style="background:linear-gradient(135deg,#0a2a2a,#062020);border-color:rgba(100,220,200,0.25);color:#70e0c0">
+        <span>${era.icon}</span> Era ${era.id} — ${era.label}</div>
+      <h2>${sc.icon} ${sc.title}</h2>
+      <p class="subtitle" style="color:#60b0a0">${sc.desc}</p>
+
+      <div class="pr-step-bar">
+        <span class="pr-step-dot active" data-step="1">1. Mix</span>
+        <span class="pr-step-line"></span>
+        <span class="pr-step-dot" data-step="2">2. Pattern</span>
+        <span class="pr-step-line"></span>
+        <span class="pr-step-dot" data-step="3">3. Print</span>
+      </div>
+
+      <!-- Step 1 - Mixing Chamber -->
+      <div class="pr-step-content" id="pr-step-mix">
+        <div class="pr-chamber-wrap">
+          <div class="pr-shelf">${ingHtml}</div>
+          <div class="pr-chamber" id="pr-chamber"
+            ondragover="event.preventDefault()"
+            ondrop="Game.onPrintDrop(event,'${sc.id}')"
+            onclick="Game.onPrintChamberClick('${sc.id}')">
+            <div class="pr-chamber-bg"></div>
+            <div class="pr-chamber-inner" id="pr-chamber-inner">
+              ${chamberContents}
+              ${materialHtml}
+            </div>
+            <div class="pr-chamber-glow" id="pr-chamber-glow"></div>
+          </div>
+          <div class="pr-pressure-gauge" id="pr-pressure-gauge" style="display:none">
+            <div class="pr-pressure-label">Hold to bond...</div>
+            <div class="pr-pressure-track">
+              <div class="pr-pressure-sweet" id="pr-pressure-sweet"></div>
+              <div class="pr-pressure-fill" id="pr-pressure-fill"></div>
+            </div>
+            <div class="pr-pressure-readout" id="pr-pressure-readout">0%</div>
+          </div>
+        </div>
+        <div class="pr-chamber-hint" id="pr-chamber-hint"></div>
+        <button class="btn pr-next-btn" id="pr-to-pattern"
+          style="display:${ch.material ? "inline-flex" : "none"}"
+          onclick="Game.onPrintToPattern()">Set Pattern →</button>
+      </div>
+
+      <!-- Step 2 - Pattern Selection -->
+      <div class="pr-step-content" id="pr-step-pattern" style="display:none">
+        <p style="color:#60b0a0;font-size:.75rem;margin-bottom:10px;text-align:center">
+          Selected material: ${ch.material ? ch.material.icon + " " + ch.material.label : "—"}
+        </p>
+        <div class="pr-swatches">${patternHtml}</div>
+        <button class="btn pr-next-btn" id="pr-to-print"
+          style="display:${ch.pattern ? "inline-flex" : "none"}"
+          onclick="Game.onPrintToPrint()">Print →</button>
+      </div>
+
+      <!-- Step 3 - Print Area -->
+      <div class="pr-step-content" id="pr-step-print" style="display:none">
+        <p style="color:#60b0a0;font-size:.65rem;margin-bottom:8px;text-align:center;font-family:'Consolas','Courier New',monospace">
+          ${ch.material ? ch.material.icon + " " + ch.material.label : "—"} · ${ch.pattern ? era.patterns.find(p => p.id === ch.pattern).icon + " " + era.patterns.find(p => p.id === ch.pattern).label : "—"}
+        </p>
+        <div class="pr-print-bed" data-matcolor="${materialColor}">
+          <div class="pr-print-head" id="pr-print-head">
+            <div class="pr-print-filament" id="pr-print-filament"></div>
+            <div class="pr-print-tip" id="pr-print-tip"></div>
+          </div>
+          <div class="pr-print-layers" id="pr-print-layers">
+            <div class="pr-layer" style="opacity:0" data-l="0"></div>
+            <div class="pr-layer" style="opacity:0" data-l="1"></div>
+            <div class="pr-layer" style="opacity:0" data-l="2"></div>
+            <div class="pr-layer" style="opacity:0" data-l="3"></div>
+            <div class="pr-layer" style="opacity:0" data-l="4"></div>
+            <div class="pr-layer" style="opacity:0" data-l="5"></div>
+            <div class="pr-layer" style="opacity:0" data-l="6"></div>
+          </div>
+          <div class="pr-print-bed-plate" id="pr-print-bed-plate"></div>
+        </div>
+        <div class="pr-print-status" id="pr-print-status">Ready to print</div>
+        <button class="btn pr-print-btn" onclick="Game.onPrintBuild('${sc.id}')" id="pr-print-btn">▶ Start Print</button>
+        <div class="pr-result" id="pr-result"></div>
+      </div>
+    </div>`;
+  }
+
+  function showPrintSuccess(era, state, scenario) {
+    const resultEl = $("pr-result");
+    const printBtn = $("pr-print-btn");
+    if (resultEl) {
+      resultEl.innerHTML = `<div class="pr-success">
+        <div class="pr-success-icon">✅</div>
+        <div class="pr-success-text">${scenario.successText}</div>
+        <button class="btn pr-next-btn" onclick="Game.onPrintNext()">
+          ${state.completed.size >= era.scenarios.length ? "🏁 All Prints Complete!" : "Next Design →"}
+        </button>
+      </div>`;
+    }
+    if (printBtn) printBtn.style.display = "none";
+  }
+
+  function showPrintFailure(era, state, scenario, errorParams) {
+    const resultEl = $("pr-result");
+    const printBtn = $("pr-print-btn");
+    const hints = scenario.failureHints;
+    const errorList = errorParams.map(ep => {
+      const label = ep === "ingredients" ? "Material" : "Infill Pattern";
+      return `<div class="pr-error"><span class="pr-error-label">${label}:</span> ${hints[ep] || "Not suitable."}</div>`;
+    }).join("");
+
+    if (printBtn) printBtn.style.display = "none";
+    if (resultEl) {
+      resultEl.innerHTML = `<div class="pr-failure">
+        <div class="pr-failure-icon">💥</div>
+        <div class="pr-failure-title">Print Failed</div>
+        <div class="pr-errors">${errorList}</div>
+        <button class="btn pr-retry-btn" onclick="Game.onPrintRetry()">↻ Retry</button>
+      </div>`;
+    }
+  }
+
+  function renderPrintAutomation(era) {
+    if (era.puzzleType !== "print") return "";
+    const iterHtml = era.ingredients.map(ing =>
+      `<span class="pr-auto-shelf-item" data-id="${ing.id}">${ing.icon}</span>`
+    ).join("");
+
+    return `<div class="auto-page show" id="auto-page">
+      <div class="auto-scene-top">
+        <div class="auto-timer" style="color:#70e0c0">
+          <span class="auto-timer-num" id="auto-timer">0.0</span><span class="auto-timer-unit">SECONDS</span>
+          <div class="auto-timer-label">elapsed</div>
+        </div>
+        <div class="auto-scene-characters">
+          <div class="auto-worker">
+            <div class="auto-worker-hat"></div>
+            <div class="auto-worker-head"></div>
+            <div class="auto-worker-body"></div>
+          </div>
+          <div class="auto-arrow"><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div></div>
+          <div class="auto-robot">
+            <div class="auto-robot-head">
+              <div class="auto-robot-antenna"></div>
+              <div class="auto-robot-eye left"></div>
+              <div class="auto-robot-eye right"></div>
+              <div class="auto-robot-mouth"></div>
+            </div>
+            <div class="auto-robot-body"></div>
+            <div class="auto-robot-arm left"></div>
+            <div class="auto-robot-arm right"></div>
+            <div class="auto-robot-wheel left"></div>
+            <div class="auto-robot-wheel right"></div>
+            <div class="auto-robot-shadow"></div>
+          </div>
+        </div>
+        <div class="era-badge" style="background:linear-gradient(135deg,#0a2a2a,#062020);border-color:rgba(100,220,200,0.25);color:#70e0c0">
+          <span>🤖</span> The Age of Robotics & 3D Printing</div>
+        <div class="speed-tag" style="background:linear-gradient(135deg,#0a2a2a,#062020);border-color:rgba(100,220,200,0.2);color:#70e0c0">
+          ⏱ ${era.automation.speed}ms per layer — 4 iterations</div>
+      </div>
+      <p class="narrative auto-narr">${era.automation.intro}</p>
+
+      <div class="pr-auto-factory">
+        <div class="pr-auto-shelf" id="pr-auto-shelf">${iterHtml}</div>
+        <div class="pr-auto-chamber" id="pr-auto-chamber">⚗️</div>
+        <div class="pr-auto-convey">
+          <span class="pr-auto-arr">→</span><span class="pr-auto-arr">→</span><span class="pr-auto-arr">→</span>
+        </div>
+        <div class="pr-auto-mini-printer" id="pr-auto-mini-printer">
+          <div class="pr-auto-mini-bed" id="pr-auto-mini-bed">
+            <div class="pr-auto-mini-layer" id="pr-auto-ml-0" style="height:0"></div>
+            <div class="pr-auto-mini-layer" id="pr-auto-ml-1" style="height:0"></div>
+            <div class="pr-auto-mini-layer" id="pr-auto-ml-2" style="height:0"></div>
+            <div class="pr-auto-mini-layer" id="pr-auto-ml-3" style="height:0"></div>
+          </div>
+          <div class="pr-auto-mini-nozzle" id="pr-auto-nozzle">⏬</div>
+        </div>
+      </div>
+
+      <div class="pr-auto-status" id="pr-auto-status">Initializing autonomous fabrication…</div>
+      <div class="auto-banner" id="auto-banner" style="display:none">
+        <div class="auto-banner-inner">
+          <div class="auto-banner-icon">🤖</div>
+          <div class="auto-banner-title">Autonomous Fabrication Complete</div>
+          <div class="auto-banner-msg">${era.automation.message}</div>
+          <button class="btn btn-ghost" onclick="Game.finishEra()">See what comes next →</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function runPrintAutomation(era) {
+    const timerEl = $("auto-timer");
+    const statusEl = $("pr-auto-status");
+    const chamber = $("pr-auto-chamber");
+    const bed = $("pr-auto-mini-bed");
+    const layers = [
+      $("pr-auto-ml-0"), $("pr-auto-ml-1"), $("pr-auto-ml-2"), $("pr-auto-ml-3")
+    ];
+    const nozzle = $("pr-auto-nozzle");
+    const banner = $("auto-banner");
+    const startTime = performance.now();
+    let step = 0;
+    const totalSteps = 4;
+
+    const combos = [
+      { mat: "lightweight_composite", icon: "🔷", label: "Lightweight Composite", pattern: "honeycomb", ok: true, color: "#60d0b0" },
+      { mat: "flexible_polymer", icon: "🌀", label: "Flexible Polymer", pattern: "solid", ok: false, color: "#c070e0" },
+      { mat: "standard_concrete", icon: "🧱", label: "Standard Concrete", pattern: "organic", ok: false, color: "#90a0a0" },
+      { mat: "flexible_polymer", icon: "🌀", label: "Flexible Polymer", pattern: "organic", ok: true, color: "#c070e0" }
+    ].sort(() => Math.random() - 0.5);
+
+    if (timerEl) timerEl.textContent = "0.0";
+    if (statusEl) statusEl.textContent = "Iteration 1/4 — mixing…";
+    if (banner) banner.style.display = "none";
+
+    function updateTimer() {
+      if (!timerEl) return;
+      const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+      timerEl.textContent = elapsed;
+      if (step < totalSteps + 1) requestAnimationFrame(updateTimer);
+    }
+    updateTimer();
+
+    function animateStep(idx) {
+      if (idx >= totalSteps) {
+        const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+        if (statusEl) {
+          statusEl.textContent = `✅ 4 iterations complete in ${elapsed}s — optimal: Lightweight Composite + Honeycomb, Flexible Polymer + Organic Lattice`;
+          statusEl.style.color = "#4ade80";
+        }
+        setTimeout(() => {
+          if (banner) banner.style.display = "flex";
+        }, 1000);
+        return;
+      }
+
+      const combo = combos[idx];
+
+      // Step 1: highlight ingredients in chamber
+      if (chamber) chamber.textContent = "🧪⚗️";
+      if (statusEl) statusEl.textContent = `Iteration ${idx + 1}/4 — synthesizing ${combo.icon} ${combo.label}…`;
+
+      // Step 2: after a beat, start printing layers
+      setTimeout(() => {
+        if (chamber) chamber.textContent = "✅";
+        if (statusEl) statusEl.textContent = `Iteration ${idx + 1}/4 — printing ${combo.pattern}…`;
+
+        // Build layers one by one
+        let l = 0;
+        const layerInterval = setInterval(() => {
+          if (l >= layers.length) {
+            clearInterval(layerInterval);
+            // Show pass/fail
+            if (statusEl) {
+              const result = combo.ok ? "✅ PASS" : "❌ FAIL";
+              statusEl.textContent = `Iteration ${idx + 1}/4 — ${combo.label} + ${combo.pattern} ${result}`;
+              statusEl.style.color = combo.ok ? "#4ade80" : "#e08060";
+            }
+            // Reset for next iteration
+            setTimeout(() => {
+              if (nozzle) nozzle.style.transform = "translateY(0)";
+              if (bed) bed.style.background = "";
+              layers.forEach(ly => { if (ly) ly.style.height = "0"; });
+              step++;
+              animateStep(step);
+            }, 1000);
+            return;
+          }
+          // Grow layer
+          if (layers[l]) {
+            layers[l].style.height = "12px";
+            layers[l].style.background = combo.color;
+          }
+          if (nozzle) nozzle.style.transform = `translateY(${l * 16 + 2}px)`;
+          l++;
+        }, 500);
+      }, 1200);
+    }
+
+    animateStep(0);
+  }
+
   return {
     renderIntro, renderNarrative, renderPuzzle,
     renderCelebration, renderAutomation, renderEndOfDemo,
@@ -1312,7 +1898,15 @@ const UIRenderer = (() => {
     // Crane balance puzzle exports
     renderBalancePuzzle,
     startBalanceGame, stopBalanceGame,
-    runBalanceAutomation
+    runBalanceAutomation,
+    // Blueprint simulator exports
+    renderBlueprintPuzzle,
+    showBlueprintSuccess, showBlueprintFailure,
+    runBlueprintAutomation,
+    // Print puzzle exports
+    renderPrintPuzzle,
+    showPrintSuccess, showPrintFailure,
+    renderPrintAutomation, runPrintAutomation
   };
 })();
 

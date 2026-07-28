@@ -148,3 +148,161 @@ const BalanceEngine = (() => {
 })();
 
 window.BalanceEngine = BalanceEngine;
+
+/**
+ * BlueprintEngine — CAD-style simulation puzzle for Era 4.
+ * Player selects parameters, runs simulation, gets targeted failure feedback.
+ */
+const BlueprintEngine = (() => {
+  function createState(era) {
+    return {
+      currentIdx: 0,
+      selections: {},   // { scenarioId: { foundation: "deep", bracing: "cross", ... } }
+      completed: new Set(),
+      complete: false
+    };
+  }
+
+  function getSelections(state, scenarioId) {
+    return state.selections[scenarioId] || {};
+  }
+
+  function getScenario(state, era) {
+    return era.scenarios[state.currentIdx] || null;
+  }
+
+  function setParam(state, scenarioId, paramId, valueId) {
+    if (state.completed.has(scenarioId)) return;
+    if (!state.selections[scenarioId]) state.selections[scenarioId] = {};
+    state.selections[scenarioId][paramId] = valueId;
+  }
+
+  /** Run simulation — checks ALL three params against the scenario's correct combo. */
+  function runSimulation(era, state, scenarioId) {
+    const scenario = era.scenarios.find(s => s.id === scenarioId);
+    if (!scenario) return { ok: false, errors: [] };
+    const sels = state.selections[scenarioId] || {};
+    const errors = [];
+    for (const param of era.params) {
+      if (sels[param.id] !== scenario.correct[param.id]) {
+        errors.push(param.id);
+      }
+    }
+    if (errors.length === 0) {
+      state.completed.add(scenarioId);
+      // Auto-advance or mark complete
+      if (state.completed.size >= era.scenarios.length) {
+        state.complete = true;
+      } else {
+        state.currentIdx++;
+      }
+    }
+    return { ok: errors.length === 0, errors };
+  }
+
+  function isComplete(state) {
+    return state.complete;
+  }
+
+  return { createState, getScenario, getSelections, setParam, runSimulation, isComplete };
+})();
+
+window.BlueprintEngine = BlueprintEngine;
+
+// ────────────────────────────────────────────────────────
+//  PrintEngine — Material Synthesizer + 3D Printer (Era 5)
+// ────────────────────────────────────────────────────────
+const PrintEngine = (() => {
+  function createState(era) {
+    return {
+      currentIdx: 0,
+      chamber: {},   // { scenarioId: { ingredients: [], material: null, pattern: null } }
+      completed: new Set(),
+      complete: false
+    };
+  }
+
+  function getScenario(state, era) {
+    return era.scenarios[state.currentIdx] || null;
+  }
+
+  function getChamber(state, scenarioId) {
+    if (!state.chamber[scenarioId]) {
+      state.chamber[scenarioId] = { ingredients: [], material: null, pattern: null };
+    }
+    return state.chamber[scenarioId];
+  }
+
+  /** Add ingredient to chamber. Returns { ok, material } or { ok: false, reason }. */
+  function addIngredient(era, state, scenarioId, ingredientId) {
+    if (state.completed.has(scenarioId)) return { ok: false, reason: "locked" };
+    const c = getChamber(state, scenarioId);
+    if (c.ingredients.length >= 2) return { ok: false, reason: "full", current: c.ingredients };
+    c.ingredients.push(ingredientId);
+    // Check if pair matches a known mix
+    if (c.ingredients.length === 2) {
+      for (const key of Object.keys(era.correctMixes)) {
+        const mix = era.correctMixes[key];
+        const hasA = c.ingredients.includes(mix.a);
+        const hasB = c.ingredients.includes(mix.b);
+        if (hasA && hasB) {
+          c.material = { id: key, ...mix };
+          return { ok: true, material: c.material, complete: true };
+        }
+      }
+      // Wrong pair
+      c.material = null;
+      return { ok: true, invalid: true, complete: false };
+    }
+    return { ok: true, complete: false };
+  }
+
+  /** Clear chamber (retry mixing). */
+  function clearChamber(state, scenarioId) {
+    if (!state.chamber[scenarioId]) return;
+    state.chamber[scenarioId] = { ingredients: [], material: null, pattern: null };
+  }
+
+  /** Set the infill pattern. */
+  function setPattern(state, scenarioId, patternId) {
+    if (state.completed.has(scenarioId)) return;
+    const c = getChamber(state, scenarioId);
+    c.pattern = patternId;
+  }
+
+  /** Run the print — checks material AND pattern. */
+  function runPrint(era, state, scenarioId) {
+    const scenario = era.scenarios.find(s => s.id === scenarioId);
+    if (!scenario) return { ok: false, errors: [] };
+    const c = getChamber(state, scenarioId);
+    const errors = [];
+
+    // Check material
+    const correctMatId = scenario.correct.ingredients;
+    if (!c.material || c.material.id !== correctMatId) {
+      errors.push("ingredients");
+    }
+    // Check pattern
+    if (c.pattern !== scenario.correct.pattern) {
+      errors.push("pattern");
+    }
+
+    if (errors.length === 0) {
+      state.completed.add(scenarioId);
+      if (state.completed.size >= era.scenarios.length) {
+        state.complete = true;
+      } else {
+        state.currentIdx++;
+      }
+    }
+    return { ok: errors.length === 0, errors };
+  }
+
+  function isComplete(state) {
+    return state.complete;
+  }
+
+  return { createState, getScenario, getChamber, addIngredient, clearChamber, setPattern, runPrint, isComplete };
+})();
+
+window.PrintEngine = PrintEngine;
