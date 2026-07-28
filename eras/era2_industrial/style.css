@@ -474,7 +474,7 @@ body.era-industrial p.narrative {
 /* Mobile responsive */
 @media (max-width: 500px) {
   .robot-arm {
-    transform: translateX(-50%) scale(0.55);
+    transform: translateX(-50%) scale(0.72);
     transform-origin: bottom center;
   }
   .belt-icon { font-size: 1rem; }
@@ -486,7 +486,7 @@ body.era-industrial p.narrative {
 }
 @media (max-width: 360px) {
   .robot-arm {
-    transform: translateX(-50%) scale(0.4);
+    transform: translateX(-50%) scale(0.6);
     transform-origin: bottom center;
   }
 }

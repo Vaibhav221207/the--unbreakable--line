@@ -262,11 +262,10 @@ Object.assign(window.UIRenderer, (() => {
     let timerStart = performance.now();
     let timerRaf = null;
 
-    // Measure fixed arm overhead (everything above the cable + below the cable)
-    const ARM_OVERHEAD = 160; // approx total fixed px: base+forearm+joints+segment+gripper
-
     function setCable(h) { cable.style.height = Math.max(h, 0) + "px"; }
     function setArmX(x) { arm.style.left = x + "px"; }
+    // Measure fixed arm height at current scale (everything except the cable)
+    function getOverhead() { return arm.getBoundingClientRect().height; }
     function openJaws()  { jawL.classList.add("open"); jawR.classList.add("open"); }
     function closeJaws() { jawL.classList.remove("open"); jawR.classList.remove("open"); }
     function setStatus(t, c) {
@@ -320,8 +319,9 @@ Object.assign(window.UIRenderer, (() => {
       const label = mat ? mat.label : matId;
 
       // Cable length = armBottom − targetTop − fixed overhead
-      const cableToBelt = Math.max(armBottom - beltTop - ARM_OVERHEAD, 8);
-      const cableToCard = Math.max(armBottom - cardTop - ARM_OVERHEAD, 8);
+      const overhead = getOverhead();
+      const cableToBelt = Math.max(armBottom - beltTop - overhead, 8);
+      const cableToCard = Math.max(armBottom - cardTop - overhead, 8);
 
       setStatus(`🤖 Picking ${label} from belt…`);
 
