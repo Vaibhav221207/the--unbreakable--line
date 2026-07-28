@@ -6,6 +6,7 @@ window.PickNPlace = (() => {
   let _sel = null;          // currently selected item id
   let _drag = {};           // HTML5 drag state
   let _lp = {};             // long-press state
+  let _zoneTap = null;      // zone touch tap state
 
   function getItemId(el) {
     if (!el || !_cfg) return null;
@@ -14,7 +15,11 @@ window.PickNPlace = (() => {
 
   function getSlotId(el) {
     if (!el || !_cfg) return null;
-    return _cfg.getSlotId ? _cfg.getSlotId(el) : (el.dataset.slotId || el.id || null);
+    return _cfg.getSlotId ? _cfg.getSlotId(el) : (el.dataset.pnpSlot || el.dataset.slotId || el.id || null);
+  }
+
+  function findSlot(el) {
+    return el ? el.closest(_cfg.slotItemSelector || '[data-pnp-slot]') : null;
   }
 
   function selectItem(id) {
@@ -91,22 +96,32 @@ window.PickNPlace = (() => {
     zone.classList.remove("pnp-drag-over");
     const id = e.dataTransfer.getData("text/plain") || _drag.itemId;
     if (!id) return;
-    const slotId = getSlotId(zone);
+    // Find the specific slot under the cursor
+    const slot = findSlot(e.target);
+    const slotId = slot ? getSlotId(slot) : getSlotId(zone);
     selectItem(id);
     placeItem(id, slotId || "drop");
   }
 
-  // ── Desktop Click (select + show prompt) ──
+  // ── Desktop Click ──
   function onClick(e) {
     const el = e.target.closest(_cfg.pickerItemSelector);
-    if (!el) return;
-    const id = getItemId(el);
-    if (!id) return;
-    selectItem(id);
-    if (_cfg.onClick) _cfg.onClick(id, el);
+    if (el) {
+      const id = getItemId(el);
+      if (!id) return;
+      selectItem(id);
+      if (_cfg.onClick) _cfg.onClick(id, el);
+      return;
+    }
+    // Click on slot inside drop zone — place selected item
+    const slot = findSlot(e.target);
+    if (slot && _sel) {
+      const slotId = getSlotId(slot);
+      if (slotId) placeItem(_sel, slotId);
+    }
   }
 
-  // ── Touch Long-Press Drag + Tap ──
+  // ── Touch Long-Press Drag + Tap (picker items) ──
   function onTouchStart(e) {
     const el = e.target.closest(_cfg.pickerItemSelector);
     if (!el) return;
@@ -153,7 +168,8 @@ window.PickNPlace = (() => {
       const drop = document.elementFromPoint(t.clientX, t.clientY);
       const zone = drop ? drop.closest(_cfg.dropZoneSelector) : null;
       if (zone) {
-        const slotId = getSlotId(zone);
+        const slot = findSlot(drop);
+        const slotId = slot ? getSlotId(slot) : getSlotId(zone);
         selectItem(_lp.materialId);
         placeItem(_lp.materialId, slotId || "drop");
       }
@@ -173,6 +189,33 @@ window.PickNPlace = (() => {
     _lp = {};
   }
 
+  // ── Touch on drop zone slots (tap to place) ──
+  function onZoneTouchStart(e) {
+    const slot = findSlot(e.target);
+    if (!slot) return;
+    const t = e.touches[0];
+    _zoneTap = {
+      slot,
+      slotId: getSlotId(slot),
+      startX: t.clientX,
+      startY: t.clientY
+    };
+  }
+
+  function onZoneTouchEnd(e) {
+    if (!_zoneTap || !_sel) { _zoneTap = null; return; }
+    const t = e.changedTouches[0];
+    const dx = t.clientX - _zoneTap.startX;
+    const dy = t.clientY - _zoneTap.startY;
+    if (dx * dx + dy * dy < LP_THRESHOLD * LP_THRESHOLD) {
+      e.preventDefault();
+      placeItem(_sel, _zoneTap.slotId);
+    }
+    _zoneTap = null;
+  }
+
+  function onZoneTouchCancel() { _zoneTap = null; }
+
   function setupListeners() {
     const items = document.querySelector(_cfg.pickerContainer) || document;
     const dropZone = document.querySelector(_cfg.dropZoneSelector);
@@ -189,14 +232,22 @@ window.PickNPlace = (() => {
       dropZone.addEventListener("drop", onDrop);
     }
 
-    // Desktop click
-    items.addEventListener("click", onClick);
+    // Desktop click (picker items + slots)
+    (items).addEventListener("click", onClick);
+    if (dropZone) dropZone.addEventListener("click", onClick);
 
-    // Touch
+    // Touch on picker items
     items.addEventListener("touchstart", onTouchStart, { passive: true });
     items.addEventListener("touchmove", onTouchMove, { passive: false });
     items.addEventListener("touchend", onTouchEnd);
     items.addEventListener("touchcancel", onTouchCancel);
+
+    // Touch on drop zone slots
+    if (dropZone) {
+      dropZone.addEventListener("touchstart", onZoneTouchStart, { passive: true });
+      dropZone.addEventListener("touchend", onZoneTouchEnd);
+      dropZone.addEventListener("touchcancel", onZoneTouchCancel);
+    }
   }
 
   function teardownListeners() {
@@ -211,12 +262,19 @@ window.PickNPlace = (() => {
       dropZone.removeEventListener("drop", onDrop);
     }
     items.removeEventListener("click", onClick);
+    if (dropZone) dropZone.removeEventListener("click", onClick);
     items.removeEventListener("touchstart", onTouchStart);
     items.removeEventListener("touchmove", onTouchMove);
     items.removeEventListener("touchend", onTouchEnd);
     items.removeEventListener("touchcancel", onTouchCancel);
+    if (dropZone) {
+      dropZone.removeEventListener("touchstart", onZoneTouchStart);
+      dropZone.removeEventListener("touchend", onZoneTouchEnd);
+      dropZone.removeEventListener("touchcancel", onZoneTouchCancel);
+    }
     cleanupLP();
     _drag = {};
+    _zoneTap = null;
   }
 
   // ── Public API ──
@@ -225,6 +283,7 @@ window.PickNPlace = (() => {
     _cfg = Object.assign({
       pickerContainer: null,
       pickerItemSelector: ".pnp-item",
+      slotItemSelector: null,
       dropZoneSelector: ".pnp-drop",
       getItemId: null,
       getSlotId: null,
