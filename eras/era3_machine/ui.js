@@ -91,7 +91,7 @@ Object.assign(window.UIRenderer, (() => {
       // Skip the fixed/disabled slider (it gets its value from _fixedSide)
       if (slider.disabled) return;
       slider.addEventListener("input", () => {
-        if (!_balanceActive) return;
+        if (!_balanceActive || Game.busy) return;
         const side = slider.dataset.side;
         const val = parseFloat(slider.value);
         const scIdx = state.currentIdx;
@@ -179,6 +179,7 @@ Object.assign(window.UIRenderer, (() => {
   function onBridgeBalanced(era, state, scenario) {
     if (state.completed.has(scenario.id)) return;
     state.completed.add(scenario.id);
+    Game.busy = true;
     const info = document.getElementById("scene-info");
     if (info) info.textContent += " ✅ Bridge balanced!";
 
@@ -189,6 +190,7 @@ Object.assign(window.UIRenderer, (() => {
       const deck = document.getElementById("bridge-deck");
       if (deck) deck.style.transform = "rotate(0deg)";
       setTimeout(() => {
+        Game.busy = false;
         if (_balanceCallbacks && _balanceCallbacks.onComplete) {
           _balanceCallbacks.onComplete();
         }
@@ -196,6 +198,7 @@ Object.assign(window.UIRenderer, (() => {
     } else {
       setTimeout(() => {
         if (!_balanceActive) return;
+        Game.busy = false;
         state.currentIdx++;
         const nextSc = era.scenarios[state.currentIdx];
         if (!nextSc) return;

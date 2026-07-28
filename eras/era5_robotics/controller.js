@@ -40,6 +40,7 @@ Object.assign(window.Game, (() => {
   }
 
   function onPrintDragStart(event, ingredientId) {
+    if (Game.busy) return;
     Game.draggedIngredient = ingredientId;
     event.dataTransfer.effectAllowed = "copy";
     Game.tapSelectedIngredient = null;
@@ -52,7 +53,7 @@ Object.assign(window.Game, (() => {
 
   function onPrintDrop(event, scenarioId) {
     event.preventDefault();
-    if (!Game.draggedIngredient) return;
+    if (Game.busy || !Game.draggedIngredient) return;
 
     Game.tapSelectedIngredient = null;
     document.querySelectorAll(".pr-ingredient").forEach(el => el.classList.remove("selected"));
@@ -63,6 +64,7 @@ Object.assign(window.Game, (() => {
   }
 
   function onPrintIngredientTap(ingredientId) {
+    if (Game.busy) return;
     Game.draggedIngredient = null;
     Game.tapSelectedIngredient = (Game.tapSelectedIngredient === ingredientId) ? null : ingredientId;
     document.querySelectorAll(".pr-ingredient").forEach(el => {
@@ -71,6 +73,7 @@ Object.assign(window.Game, (() => {
   }
 
   function onPrintChamberClick(scenarioId) {
+    if (Game.busy) return;
     if (Game.tapSelectedIngredient) {
       const ingId = Game.tapSelectedIngredient;
       Game.tapSelectedIngredient = null;
@@ -128,6 +131,7 @@ Object.assign(window.Game, (() => {
   }
 
   function onPrintBuild(scenarioId) {
+    Game.busy = true;
     const printBtn = $("pr-print-btn");
     const statusEl = $("pr-print-status");
     const layers = document.querySelectorAll(".pr-layer");
@@ -221,6 +225,7 @@ Object.assign(window.Game, (() => {
                 : `linear-gradient(90deg, transparent, ${matColor}22, transparent)`;
           }
           setTimeout(() => {
+            Game.busy = false;
             const result = window.PrintEngine.runPrint(Game.currentEra, Game.state, scenarioId);
             if (result.ok) {
               if (statusEl) statusEl.textContent = `✅ Print complete — ${patternIcon} ${ch.material ? ch.material.label : ""}`;

@@ -5,6 +5,7 @@ window.Game = {
   touchSelected: null,
   automationTimers: [],
   simRunning: false,
+  busy: false,
   draggedIngredient: null,
   tapSelectedIngredient: null
 };
