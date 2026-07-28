@@ -4,15 +4,93 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>The Unbreakable Boundary</title>
-<link rel="stylesheet" href="style.css">
+<!-- Core styles -->
+<link rel="stylesheet" href="core/core.css">
+<!-- Era styles -->
+<link rel="stylesheet" href="eras/era1_stone/style.css">
+<link rel="stylesheet" href="eras/era2_industrial/style.css">
+<link rel="stylesheet" href="eras/era3_machine/style.css">
+<link rel="stylesheet" href="eras/era4_cad/style.css">
+<link rel="stylesheet" href="eras/era5_robotics/style.css">
 </head>
 <body>
 <div id="app"></div>
 
-<!-- Module load order: data → puzzle engine → UI renderer → game controller -->
-<script src="data.js"></script>
-<script src="puzzle.js"></script>
-<script src="ui.js"></script>
-<script src="game.js"></script>
+<!-- CORE -->
+<script src="core/data.js"></script>
+<script src="core/ui.js"></script>
+<script src="core/game.js"></script>
+
+<!-- ERA 1 -->
+<script src="eras/era1_stone/data.js"></script>
+<script src="eras/era1_stone/engine.js"></script>
+<script src="eras/era1_stone/ui.js"></script>
+<script src="eras/era1_stone/controller.js"></script>
+
+<!-- ERA 2 -->
+<script src="eras/era2_industrial/data.js"></script>
+<script src="eras/era2_industrial/engine.js"></script>
+<script src="eras/era2_industrial/ui.js"></script>
+<script src="eras/era2_industrial/controller.js"></script>
+
+<!-- ERA 3 -->
+<script src="eras/era3_machine/data.js"></script>
+<script src="eras/era3_machine/engine.js"></script>
+<script src="eras/era3_machine/ui.js"></script>
+<script src="eras/era3_machine/controller.js"></script>
+
+<!-- ERA 4 -->
+<script src="eras/era4_cad/data.js"></script>
+<script src="eras/era4_cad/engine.js"></script>
+<script src="eras/era4_cad/ui.js"></script>
+<script src="eras/era4_cad/controller.js"></script>
+
+<!-- ERA 5 -->
+<script src="eras/era5_robotics/data.js"></script>
+<script src="eras/era5_robotics/engine.js"></script>
+<script src="eras/era5_robotics/ui.js"></script>
+<script src="eras/era5_robotics/controller.js"></script>
+
+<!-- Inline handler shims -->
+<script>
+  window.showNarrative = Game.showNarrative;
+  window.launchPuzzle = Game.launchPuzzle;
+  window.showAutomation = Game.showAutomation;
+  window.finishEra = Game.finishEra;
+  window.restart = Game.restart;
+  window.nextEra = Game.nextEra;
+  window.jumpToEra = Game.jumpToEra;
+  window.render = Game.render;
+  window.append = Game.append;
+  window.appendToBody = Game.appendToBody;
+  window.onPieceClick = Game.onPieceClick;
+  window.onSlotClick = Game.onSlotClick;
+  window.onBlueprintParam = Game.onBlueprintParam;
+  window.onBlueprintSimulate = Game.onBlueprintSimulate;
+  window.onBlueprintNext = Game.onBlueprintNext;
+  window.onBlueprintRetry = Game.onBlueprintRetry;
+  window.onPrintDragStart = Game.onPrintDragStart;
+  window.onPrintDragEnd = Game.onPrintDragEnd;
+  window.onPrintDrop = Game.onPrintDrop;
+  window.onPrintChamberClick = Game.onPrintChamberClick;
+  window.onPrintIngredientTap = Game.onPrintIngredientTap;
+  window.onPrintToPattern = Game.onPrintToPattern;
+  window.onPrintPattern = Game.onPrintPattern;
+  window.onPrintToPrint = Game.onPrintToPrint;
+  window.onPrintBuild = Game.onPrintBuild;
+  window.onPrintNext = Game.onPrintNext;
+  window.onPrintRetry = Game.onPrintRetry;
+
+  // Bootstrap
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("[Game] Loading…");
+    try { Game.init(); console.log("[Game] Ready"); }
+    catch (e) {
+      console.error("[Game] Init error:", e);
+      document.getElementById("app").innerHTML =
+        '<div style="color:#c8543c;padding:40px;text-align:center"><h2>⚠️ Error</h2><p>' + e.message + '</p></div>';
+    }
+  });
+</script>
 </body>
 </html>
