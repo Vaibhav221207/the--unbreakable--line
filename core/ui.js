@@ -88,28 +88,57 @@ window.UIRenderer = (() => {
               <span class="auto-timer-num" id="auto-timer">0.0</span><span class="auto-timer-unit">SECONDS</span>
               <div class="auto-timer-label">elapsed</div>
             </div>
-            <div class="auto-scene-characters">
-              <div class="auto-worker">
-                <div class="auto-worker-hat"></div>
-                <div class="auto-worker-head"></div>
-                <div class="auto-worker-body"></div>
-              </div>
-              <div class="auto-arrow"><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div></div>
-              <div class="auto-robot">
-                <div class="auto-robot-head">
-                  <div class="auto-robot-antenna"></div>
-                  <div class="auto-robot-eye left"></div>
-                  <div class="auto-robot-eye right"></div>
-                  <div class="auto-robot-mouth"></div>
+          <div class="auto-scene-characters">
+            <div class="auto-worker">
+              <div class="auto-worker-hat"></div>
+              <div class="auto-worker-head">
+                <div class="auto-worker-glasses">
+                  <div class="auto-worker-lens left"></div>
+                  <div class="auto-worker-lens right"></div>
+                  <div class="auto-worker-bridge"></div>
                 </div>
-                <div class="auto-robot-body"></div>
-                <div class="auto-robot-arm left"></div>
-                <div class="auto-robot-arm right"></div>
-                <div class="auto-robot-wheel left"></div>
-                <div class="auto-robot-wheel right"></div>
-                <div class="auto-robot-shadow"></div>
+                <div class="auto-worker-eye left"></div>
+                <div class="auto-worker-eye right"></div>
+                <div class="auto-worker-smile"></div>
+              </div>
+              <div class="auto-worker-body">
+                <div class="auto-worker-collar"></div>
+                <div class="auto-worker-pocket"></div>
+              </div>
+              <div class="auto-worker-arm left"></div>
+              <div class="auto-worker-arm right">
+                <div class="auto-worker-blueprint"></div>
+              </div>
+              <div class="auto-worker-legs">
+                <div class="auto-worker-leg left"></div>
+                <div class="auto-worker-leg right"></div>
               </div>
             </div>
+            <div class="auto-arrow"><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div></div>
+            <div class="auto-robot">
+              <div class="auto-robot-antenna"></div>
+              <div class="auto-robot-head">
+                <div class="auto-robot-visor"></div>
+                <div class="auto-robot-indicator"></div>
+              </div>
+              <div class="auto-robot-body">
+                <div class="auto-robot-vent"></div>
+                <div class="auto-robot-bolt top"></div>
+                <div class="auto-robot-bolt bottom"></div>
+              </div>
+              <div class="auto-robot-arm left">
+                <div class="auto-robot-joint"></div>
+              </div>
+              <div class="auto-robot-arm right">
+                <div class="auto-robot-joint"></div>
+              </div>
+              <div class="auto-robot-base">
+                <div class="auto-robot-wheel left"></div>
+                <div class="auto-robot-wheel right"></div>
+              </div>
+              <div class="auto-robot-shadow"></div>
+            </div>
+          </div>
             <div class="machine-specs">
               <span class="spec-item">⚡ ${era.automation.speed}ms/arm</span>
               <span class="spec-item">🔧 18× human</span>
@@ -184,22 +213,51 @@ window.UIRenderer = (() => {
           <div class="auto-scene-characters">
             <div class="auto-worker">
               <div class="auto-worker-hat"></div>
-              <div class="auto-worker-head"></div>
-              <div class="auto-worker-body"></div>
+              <div class="auto-worker-head">
+                <div class="auto-worker-glasses">
+                  <div class="auto-worker-lens left"></div>
+                  <div class="auto-worker-lens right"></div>
+                  <div class="auto-worker-bridge"></div>
+                </div>
+                <div class="auto-worker-eye left"></div>
+                <div class="auto-worker-eye right"></div>
+                <div class="auto-worker-smile"></div>
+              </div>
+              <div class="auto-worker-body">
+                <div class="auto-worker-collar"></div>
+                <div class="auto-worker-pocket"></div>
+              </div>
+              <div class="auto-worker-arm left"></div>
+              <div class="auto-worker-arm right">
+                <div class="auto-worker-blueprint"></div>
+              </div>
+              <div class="auto-worker-legs">
+                <div class="auto-worker-leg left"></div>
+                <div class="auto-worker-leg right"></div>
+              </div>
             </div>
             <div class="auto-arrow"><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div></div>
             <div class="auto-robot">
+              <div class="auto-robot-antenna"></div>
               <div class="auto-robot-head">
-                <div class="auto-robot-antenna"></div>
-                <div class="auto-robot-eye left"></div>
-                <div class="auto-robot-eye right"></div>
-                <div class="auto-robot-mouth"></div>
+                <div class="auto-robot-visor"></div>
+                <div class="auto-robot-indicator"></div>
               </div>
-              <div class="auto-robot-body"></div>
-              <div class="auto-robot-arm left"></div>
-              <div class="auto-robot-arm right"></div>
-              <div class="auto-robot-wheel left"></div>
-              <div class="auto-robot-wheel right"></div>
+              <div class="auto-robot-body">
+                <div class="auto-robot-vent"></div>
+                <div class="auto-robot-bolt top"></div>
+                <div class="auto-robot-bolt bottom"></div>
+              </div>
+              <div class="auto-robot-arm left">
+                <div class="auto-robot-joint"></div>
+              </div>
+              <div class="auto-robot-arm right">
+                <div class="auto-robot-joint"></div>
+              </div>
+              <div class="auto-robot-base">
+                <div class="auto-robot-wheel left"></div>
+                <div class="auto-robot-wheel right"></div>
+              </div>
               <div class="auto-robot-shadow"></div>
             </div>
           </div>
@@ -252,22 +310,51 @@ window.UIRenderer = (() => {
           <div class="auto-scene-characters">
             <div class="auto-worker">
               <div class="auto-worker-hat"></div>
-              <div class="auto-worker-head"></div>
-              <div class="auto-worker-body"></div>
+              <div class="auto-worker-head">
+                <div class="auto-worker-glasses">
+                  <div class="auto-worker-lens left"></div>
+                  <div class="auto-worker-lens right"></div>
+                  <div class="auto-worker-bridge"></div>
+                </div>
+                <div class="auto-worker-eye left"></div>
+                <div class="auto-worker-eye right"></div>
+                <div class="auto-worker-smile"></div>
+              </div>
+              <div class="auto-worker-body">
+                <div class="auto-worker-collar"></div>
+                <div class="auto-worker-pocket"></div>
+              </div>
+              <div class="auto-worker-arm left"></div>
+              <div class="auto-worker-arm right">
+                <div class="auto-worker-blueprint"></div>
+              </div>
+              <div class="auto-worker-legs">
+                <div class="auto-worker-leg left"></div>
+                <div class="auto-worker-leg right"></div>
+              </div>
             </div>
             <div class="auto-arrow"><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div></div>
             <div class="auto-robot">
+              <div class="auto-robot-antenna"></div>
               <div class="auto-robot-head">
-                <div class="auto-robot-antenna"></div>
-                <div class="auto-robot-eye left"></div>
-                <div class="auto-robot-eye right"></div>
-                <div class="auto-robot-mouth"></div>
+                <div class="auto-robot-visor"></div>
+                <div class="auto-robot-indicator"></div>
               </div>
-              <div class="auto-robot-body"></div>
-              <div class="auto-robot-arm left"></div>
-              <div class="auto-robot-arm right"></div>
-              <div class="auto-robot-wheel left"></div>
-              <div class="auto-robot-wheel right"></div>
+              <div class="auto-robot-body">
+                <div class="auto-robot-vent"></div>
+                <div class="auto-robot-bolt top"></div>
+                <div class="auto-robot-bolt bottom"></div>
+              </div>
+              <div class="auto-robot-arm left">
+                <div class="auto-robot-joint"></div>
+              </div>
+              <div class="auto-robot-arm right">
+                <div class="auto-robot-joint"></div>
+              </div>
+              <div class="auto-robot-base">
+                <div class="auto-robot-wheel left"></div>
+                <div class="auto-robot-wheel right"></div>
+              </div>
               <div class="auto-robot-shadow"></div>
             </div>
           </div>
@@ -309,28 +396,57 @@ window.UIRenderer = (() => {
           <span class="auto-timer-num" id="auto-timer">0.0</span><span class="auto-timer-unit">SECONDS</span>
           <div class="auto-timer-label">elapsed</div>
         </div>
-        <div class="auto-scene-characters">
-          <div class="auto-worker">
-            <div class="auto-worker-hat"></div>
-            <div class="auto-worker-head"></div>
-            <div class="auto-worker-body"></div>
-          </div>
-          <div class="auto-arrow"><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div></div>
-          <div class="auto-robot">
-            <div class="auto-robot-head">
-              <div class="auto-robot-antenna"></div>
-              <div class="auto-robot-eye left"></div>
-              <div class="auto-robot-eye right"></div>
-              <div class="auto-robot-mouth"></div>
+          <div class="auto-scene-characters">
+            <div class="auto-worker">
+              <div class="auto-worker-hat"></div>
+              <div class="auto-worker-head">
+                <div class="auto-worker-glasses">
+                  <div class="auto-worker-lens left"></div>
+                  <div class="auto-worker-lens right"></div>
+                  <div class="auto-worker-bridge"></div>
+                </div>
+                <div class="auto-worker-eye left"></div>
+                <div class="auto-worker-eye right"></div>
+                <div class="auto-worker-smile"></div>
+              </div>
+              <div class="auto-worker-body">
+                <div class="auto-worker-collar"></div>
+                <div class="auto-worker-pocket"></div>
+              </div>
+              <div class="auto-worker-arm left"></div>
+              <div class="auto-worker-arm right">
+                <div class="auto-worker-blueprint"></div>
+              </div>
+              <div class="auto-worker-legs">
+                <div class="auto-worker-leg left"></div>
+                <div class="auto-worker-leg right"></div>
+              </div>
             </div>
-            <div class="auto-robot-body"></div>
-            <div class="auto-robot-arm left"></div>
-            <div class="auto-robot-arm right"></div>
-            <div class="auto-robot-wheel left"></div>
-            <div class="auto-robot-wheel right"></div>
-            <div class="auto-robot-shadow"></div>
+            <div class="auto-arrow"><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div><div class="auto-arrow-dot"></div></div>
+            <div class="auto-robot">
+              <div class="auto-robot-antenna"></div>
+              <div class="auto-robot-head">
+                <div class="auto-robot-visor"></div>
+                <div class="auto-robot-indicator"></div>
+              </div>
+              <div class="auto-robot-body">
+                <div class="auto-robot-vent"></div>
+                <div class="auto-robot-bolt top"></div>
+                <div class="auto-robot-bolt bottom"></div>
+              </div>
+              <div class="auto-robot-arm left">
+                <div class="auto-robot-joint"></div>
+              </div>
+              <div class="auto-robot-arm right">
+                <div class="auto-robot-joint"></div>
+              </div>
+              <div class="auto-robot-base">
+                <div class="auto-robot-wheel left"></div>
+                <div class="auto-robot-wheel right"></div>
+              </div>
+              <div class="auto-robot-shadow"></div>
+            </div>
           </div>
-        </div>
         <div class="era-badge" style="background:linear-gradient(135deg,#a07048,#805030);border-color:rgba(200,160,120,0.2);color:#f8e8d0">
           <span>🪨</span> The Age of Hands</div>
         <div class="speed-tag" style="background:linear-gradient(135deg,#a07048,#805030);border-color:rgba(200,160,120,0.2);color:#f8e8d0">

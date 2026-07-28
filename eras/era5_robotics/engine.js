@@ -30,11 +30,17 @@ const PrintEngine = (() => {
     c.ingredients.push(ingredientId);
     // Check if pair matches a known mix
     if (c.ingredients.length === 2) {
+      const scenario = era.scenarios.find(s => s.id === scenarioId);
       for (const key of Object.keys(era.correctMixes)) {
         const mix = era.correctMixes[key];
         const hasA = c.ingredients.includes(mix.a);
         const hasB = c.ingredients.includes(mix.b);
         if (hasA && hasB) {
+          // Valid mix found — but does it match the current scenario?
+          if (!scenario || key !== scenario.correct.ingredients) {
+            c.material = null;
+            return { ok: true, invalid: true, complete: false };
+          }
           c.material = { id: key, ...mix };
           return { ok: true, material: c.material, complete: true };
         }

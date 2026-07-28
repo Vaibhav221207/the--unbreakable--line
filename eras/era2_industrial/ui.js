@@ -361,7 +361,7 @@ Object.assign(window.UIRenderer, (() => {
                   matEl.style.opacity = "0";
                   const resultEl = document.getElementById("auto-result-" + s.id);
                   if (resultEl) {
-                    resultEl.innerHTML = `<span class="match-filled">⚙️ ${label}</span>`;
+                    resultEl.innerHTML = `<span class="match-filled">${icon} ${label}</span>`;
                   }
                   setStatus(`✅ ${label} → ${s.title}  (${step + 1}/${scenarios.length})`);
 
