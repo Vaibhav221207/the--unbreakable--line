@@ -491,3 +491,13 @@ body.era-industrial p.narrative {
   }
 }
 
+/* Automation page — keep arm below conveyor on mobile */
+.auto-page {
+  padding-bottom: 140px;
+}
+@media (max-width: 500px) {
+  .auto-page {
+    padding-bottom: 120px;
+  }
+}
+
