@@ -1,0 +1,551 @@
+/* ============================================================
+   Era 5 — Robotics & 3D Printing (dark charcoal, teal/white)
+   ============================================================ */
+body.era-robotics {
+  --bg: #0e1414;
+  --text: #c0e0d8;
+  --accent: #60d0b0;
+  --accent2: #90e8d0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Consolas", "Courier New", monospace;
+}
+body.era-robotics::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(100,220,200,0.02) 40px, rgba(100,220,200,0.02) 41px),
+    repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(100,220,200,0.02) 40px, rgba(100,220,200,0.02) 41px);
+  pointer-events: none;
+  z-index: -1;
+}
+body.era-robotics::after {
+  content: "";
+  position: fixed;
+  bottom: -20%;
+  left: -10%;
+  width: 120%;
+  height: 40%;
+  background:
+    radial-gradient(ellipse 60% 80% at 50% 100%, rgba(100,220,200,0.04), transparent);
+  pointer-events: none;
+  z-index: -1;
+}
+body.era-robotics .era-badge {
+  background: linear-gradient(135deg, #0a2a2a, #062020) !important;
+  border-color: rgba(100,220,200,0.25) !important;
+  color: #70e0c0 !important;
+}
+body.era-robotics .btn {
+  background: linear-gradient(135deg, #0a3a3a, #0a2a2a) !important;
+  border: 1px solid rgba(100,220,200,0.25) !important;
+  color: #70e0c0 !important;
+  font-family: "Consolas", "Courier New", monospace !important;
+}
+body.era-robotics .btn:hover {
+  background: linear-gradient(135deg, #105050, #0a3a3a) !important;
+  box-shadow: 0 0 12px rgba(100,220,200,0.12) !important;
+}
+body.era-robotics h1 {
+  font-family: "Consolas", "Courier New", monospace !important;
+  color: #90e8d0 !important;
+  letter-spacing: 2px !important;
+}
+body.era-robotics h2 {
+  font-family: "Consolas", "Courier New", monospace !important;
+  color: #90e8d0 !important;
+}
+body.era-robotics p.subtitle {
+  color: #60b0a0 !important;
+  font-family: "Consolas", "Courier New", monospace !important;
+}
+body.era-robotics p.narrative {
+  font-family: "Consolas", "Courier New", monospace !important;
+  color: #70b0a0 !important;
+}
+
+/* ============================================================
+   Print Puzzle — Mixing Chamber + 3D Printer (Era 5)
+   ============================================================ */
+
+/* Step progress bar */
+.pr-step-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 10px auto 14px;
+}
+.pr-step-dot {
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: .6rem;
+  color: rgba(100,220,200,0.3);
+  letter-spacing: 1px;
+  transition: color .3s;
+}
+.pr-step-dot.active { color: #70e0c0; }
+.pr-step-line {
+  width: 30px;
+  height: 1px;
+  background: rgba(100,220,200,0.15);
+}
+
+/* Step content areas */
+.pr-step-content { margin-top: 6px; }
+
+/* --- Mixing Chamber --- */
+.pr-chamber-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.pr-shelf {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid rgba(100,220,200,0.1);
+  border-radius: 8px;
+  background: rgba(14,24,24,0.6);
+  max-width: 380px;
+}
+.pr-ingredient {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  border: 1px solid rgba(100,220,200,0.12);
+  border-radius: 6px;
+  background: rgba(100,220,200,0.04);
+  cursor: grab;
+  transition: all .15s;
+  user-select: none;
+}
+.pr-ingredient:hover {
+  border-color: rgba(100,220,200,0.35);
+  background: rgba(100,220,200,0.08);
+  transform: translateY(-2px);
+}
+.pr-ingredient:active { cursor: grabbing; }
+.pr-ing-icon { font-size: 1.3rem; }
+.pr-ing-label {
+  font-size: .5rem;
+  color: rgba(100,220,200,0.6);
+  font-family: "Consolas", "Courier New", monospace;
+  white-space: nowrap;
+}
+.pr-chamber {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  border: 2px dashed rgba(100,220,200,0.2);
+  border-radius: 12px;
+  background: rgba(14,24,24,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all .3s;
+  cursor: pointer;
+}
+.pr-chamber:hover {
+  border-color: rgba(100,220,200,0.35);
+  background: rgba(14,30,30,0.8);
+}
+.pr-chamber-bg {
+  position: absolute;
+  bottom: 0; left: 0; width: 100%; height: 0;
+  background: linear-gradient(0deg, rgba(100,220,200,0.06), transparent);
+  transition: height .5s;
+}
+.pr-chamber.pr-chamber-success .pr-chamber-bg {
+  height: 100%;
+}
+.pr-chamber-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  z-index: 1;
+}
+.pr-chamber-placeholder {
+  font-size: .6rem;
+  color: rgba(100,220,200,0.25);
+  font-family: "Consolas", "Courier New", monospace;
+  font-style: italic;
+}
+.pr-chamber-item {
+  font-size: 1.4rem;
+  animation: prDropIn .25s ease;
+}
+.pr-chamber-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 120px; height: 120px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(100,220,200,0.2), transparent);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+  z-index: 0;
+}
+.pr-material-sample {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border: 1px solid rgba(100,220,200,0.3);
+  border-radius: 20px;
+  background: rgba(100,220,200,0.08);
+  font-size: .7rem;
+  color: #80e0c8;
+  animation: prDropIn .35s ease;
+}
+.pr-chamber-hint {
+  text-align: center;
+  font-size: .6rem;
+  color: rgba(200,140,100,0.7);
+  min-height: 18px;
+  margin: 4px auto;
+  font-family: "Consolas", "Courier New", monospace;
+}
+.pr-chamber-spark .pr-chamber-inner {
+  animation: prSpark .6s ease;
+}
+.pr-ingredient.selected {
+  border-color: rgba(100,220,200,0.6);
+  box-shadow: 0 0 12px rgba(100,220,200,0.3), 0 0 24px rgba(100,220,200,0.1);
+  transform: translateY(-4px);
+  background: rgba(100,220,200,0.08);
+}
+@keyframes prDropIn {
+  0% { opacity: 0; transform: scale(0.5) translateY(-10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes prSpark {
+  0% { filter: brightness(1); }
+  25% { filter: brightness(2) hue-rotate(-20deg); }
+  50% { filter: brightness(0.3) hue-rotate(20deg); }
+  75% { filter: brightness(1.5) hue-rotate(-10deg); }
+  100% { filter: brightness(1); }
+}
+
+/* --- Pattern swatches --- */
+.pr-swatches {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.pr-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 80px;
+  height: 96px;
+  justify-content: center;
+  border: 2px solid rgba(100,220,200,0.12);
+  border-radius: 10px;
+  background: rgba(14,24,24,0.6);
+  cursor: pointer;
+  transition: all .2s;
+}
+.pr-swatch:hover {
+  border-color: rgba(100,220,200,0.35);
+  background: rgba(100,220,200,0.06);
+  transform: translateY(-3px);
+}
+.pr-swatch.active {
+  border-color: rgba(100,220,200,0.6);
+  background: rgba(100,220,200,0.1);
+  box-shadow: 0 0 16px rgba(100,220,200,0.12);
+}
+.pr-swatch-icon { font-size: 1.4rem; }
+.pr-swatch-label {
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: .5rem;
+  color: rgba(100,220,200,0.6);
+  text-align: center;
+}
+
+/* --- 3D Print Bed --- */
+.pr-print-bed {
+  position: relative;
+  width: 200px;
+  height: 160px;
+  margin: 0 auto 10px;
+  border: 1px solid rgba(100,220,200,0.12);
+  border-radius: 4px;
+  background: rgba(14,24,24,0.7);
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  overflow: hidden;
+  transition: box-shadow .3s;
+}
+.pr-print-head {
+  position: absolute;
+  top: -4px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 20px;
+  transform: translateX(-40px);
+  transition: transform .3s ease;
+}
+.pr-print-filament {
+  width: 3px;
+  height: 20px;
+  border-radius: 1px;
+  background: var(--mat-color, #70e0c0);
+  opacity: 0.8;
+}
+.pr-print-tip {
+  width: 10px;
+  height: 6px;
+  border-radius: 2px 2px 0 0;
+  background: var(--mat-color, #70e0c0);
+  clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+}
+.pr-print-layers {
+  display: flex;
+  flex-direction: column-reverse;
+  width: 70%;
+  gap: 3px;
+  margin-bottom: 6px;
+  z-index: 2;
+}
+.pr-layer {
+  width: 100%;
+  height: 12px;
+  background: linear-gradient(90deg, rgba(100,220,200,0.25), rgba(100,220,200,0.4), rgba(100,220,200,0.25));
+  border-radius: 2px;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: opacity .2s, transform .2s;
+  position: relative;
+}
+.pr-layer-honeycomb {
+  background-image: 
+    repeating-linear-gradient(60deg, transparent 0px, transparent 5px, rgba(255,255,255,0.12) 5px, rgba(255,255,255,0.12) 6px),
+    repeating-linear-gradient(-60deg, transparent 0px, transparent 5px, rgba(255,255,255,0.1) 5px, rgba(255,255,255,0.1) 6px);
+  background-size: 10px 100%;
+  animation: prHexPulse .6s ease infinite alternate;
+}
+.pr-layer-organic {
+  border-radius: 40% 60% 2px 2px;
+  background: linear-gradient(135deg, rgba(100,220,200,0.15), rgba(100,220,200,0.5), rgba(100,220,200,0.15));
+  clip-path: polygon(0% 30%, 10% 10%, 25% 35%, 40% 15%, 55% 40%, 70% 10%, 85% 35%, 100% 20%, 100% 100%, 0% 100%);
+  animation: prWavyPulse .8s ease infinite alternate;
+}
+@keyframes prHexPulse {
+  0% { filter: brightness(.8); }
+  100% { filter: brightness(1.2); }
+}
+@keyframes prWavyPulse {
+  0% { clip-path: polygon(0% 30%, 10% 10%, 25% 35%, 40% 15%, 55% 40%, 70% 10%, 85% 35%, 100% 20%, 100% 100%, 0% 100%); }
+  100% { clip-path: polygon(0% 20%, 10% 40%, 25% 15%, 40% 35%, 55% 20%, 70% 40%, 85% 15%, 100% 30%, 100% 100%, 0% 100%); }
+}
+.pr-layer:nth-child(odd) {
+  background: linear-gradient(90deg, rgba(100,220,200,0.2), rgba(100,220,200,0.35), rgba(100,220,200,0.2));
+}
+.pr-print-bed-plate {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(100,220,200,0.08);
+  z-index: 3;
+}
+.pr-print-status {
+  text-align: center;
+  font-size: .65rem;
+  color: rgba(100,220,200,0.5);
+  font-family: "Consolas", "Courier New", monospace;
+  margin-bottom: 6px;
+  min-height: 18px;
+}
+.pr-print-btn {
+  display: block;
+  margin: 6px auto;
+}
+.pr-result {
+  width: 100%;
+  max-width: 400px;
+  margin: 4px auto;
+  min-height: 40px;
+}
+.pr-success {
+  text-align: center;
+  animation: bpFadeIn .3s ease;
+}
+.pr-success-icon { font-size: 2rem; margin-bottom: 4px; }
+.pr-success-text {
+  font-size: .72rem;
+  color: rgba(180,220,210,0.8);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+.pr-failure {
+  text-align: center;
+  animation: bpFadeIn .3s ease;
+}
+.pr-failure-icon { font-size: 2rem; margin-bottom: 4px; }
+.pr-failure-title {
+  font-size: .85rem;
+  font-weight: 700;
+  color: #e8a080;
+  margin-bottom: 6px;
+}
+.pr-errors {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.pr-error {
+  font-size: .65rem;
+  color: #c0d8d0;
+  line-height: 1.4;
+  padding: 4px 8px;
+  background: rgba(200,100,80,0.08);
+  border-left: 2px solid rgba(200,100,80,0.3);
+  border-radius: 2px;
+}
+.pr-error-label { font-weight: 700; color: #e09070; }
+.pr-next-btn {
+  margin-top: 4px;
+}
+.pr-retry-btn {
+  margin-top: 6px;
+  font-size: .8rem;
+  padding: 6px 24px;
+}
+
+/* --- Print automation factory visual --- */
+.pr-auto-factory {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 10px auto;
+  max-width: 420px;
+  padding: 10px;
+  border: 1px solid rgba(100,220,200,0.08);
+  border-radius: 8px;
+  background: rgba(14,24,24,0.4);
+}
+.pr-auto-shelf {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 140px;
+}
+.pr-auto-shelf-item {
+  font-size: 1rem;
+  opacity: 0.3;
+  transition: opacity .3s;
+}
+.pr-auto-chamber {
+  font-size: 1.4rem;
+  width: 40px;
+  text-align: center;
+  animation: prAutoChamberPulse 1s ease infinite;
+}
+@keyframes prAutoChamberPulse {
+  0%,100% { transform: scale(1); opacity: .6; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+.pr-auto-convey {
+  display: flex;
+  gap: 2px;
+  font-size: 1rem;
+}
+.pr-auto-convey .pr-auto-arr {
+  color: rgba(100,220,200,0.3);
+  animation: prAutoPulse .8s ease infinite;
+}
+.pr-auto-convey .pr-auto-arr:nth-child(2) { animation-delay: .2s; }
+.pr-auto-convey .pr-auto-arr:nth-child(3) { animation-delay: .4s; }
+@keyframes prAutoPulse {
+  0%,100% { opacity: .3; }
+  50% { opacity: 1; }
+}
+.pr-auto-mini-printer {
+  position: relative;
+  width: 60px;
+  height: 70px;
+  border: 1px solid rgba(100,220,200,0.15);
+  border-radius: 4px;
+  background: rgba(14,24,24,0.7);
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  overflow: hidden;
+}
+.pr-auto-mini-bed {
+  width: 70%;
+  display: flex;
+  flex-direction: column-reverse;
+  margin-bottom: 2px;
+  gap: 1px;
+}
+.pr-auto-mini-layer {
+  width: 100%;
+  height: 0;
+  border-radius: 1px;
+  transition: height .15s;
+}
+.pr-auto-mini-nozzle {
+  position: absolute;
+  top: 2px;
+  font-size: .7rem;
+  transition: transform .15s;
+}
+
+.pr-auto-status {
+  text-align: center;
+  font-size: .7rem;
+  color: rgba(100,220,200,0.6);
+  font-family: "Consolas", "Courier New", monospace;
+  margin: 8px auto;
+}
+
+/* Scene progress (dot indicators) */
+.scene-progress {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 6px auto;
+}
+.scene-progress .sp-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(100,150,200,0.15);
+  border: 1px solid rgba(100,150,200,0.1);
+  transition: all .3s;
+}
+.scene-progress .sp-dot.done {
+  background: rgba(60,200,120,0.4);
+  border-color: rgba(60,200,120,0.3);
+  box-shadow: 0 0 6px rgba(60,200,120,0.15);
+}
+.scene-progress .sp-dot.active {
+  background: rgba(100,180,240,0.3);
+  border-color: rgba(100,180,240,0.3);
+  transform: scale(1.3);
+}
+

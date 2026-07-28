@@ -1,0 +1,478 @@
+/* === Era 2 — Industrial theme overrides === */
+body.era-industrial {
+  --bg1: #4a2418;
+  --bg2: #6a3828;
+  --bg3: #5a2e20;
+  --surface: rgba(220,140,100,0.1);
+  --border: rgba(240,180,140,0.22);
+  --border-hover: rgba(255,200,160,0.4);
+  --stone-light: #f8d0b0;
+  --stone-mid: #e0b088;
+  --stone-dark: #c09068;
+  --text: #faf0e8;
+  --text-dim: #e8c8b0;
+  --text-bright: #f8c890;
+  --accent: #f8c890;
+  --success: #60d0e0;
+  --danger: #e86050;
+  --font-heading: 'Impact', 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+  --font-body: 'Segoe UI', 'Arial', sans-serif;
+}
+body.era-industrial {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 20%, #8a4840 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 90%, #6a3830 0%, transparent 50%),
+    linear-gradient(170deg, #4a2418 0%, #6a3828 30%, #5a2e20 60%, #4a2418 100%) !important;
+}
+body.era-industrial::before {
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 30%, rgba(255,200,160,0.2), transparent),
+    radial-gradient(1px 1px at 40% 70%, rgba(255,200,160,0.14), transparent),
+    radial-gradient(2px 2px at 60% 20%, rgba(255,200,160,0.12), transparent),
+    radial-gradient(1px 1px at 80% 50%, rgba(255,200,160,0.16), transparent) !important;
+}
+body.era-industrial::after {
+  background: radial-gradient(ellipse 40% 25% at 70% 85%, rgba(255,160,80,0.14), transparent 70%) !important;
+  animation: steamPulse 3s ease-in-out infinite !important;
+}
+@keyframes steamPulse {
+  0%,100% { opacity:0.5; } 50% { opacity:1; }
+}
+body.era-industrial .era-badge {
+  background: linear-gradient(135deg, #c07048, #a05830) !important;
+  border-color: rgba(255,180,120,0.4) !important;
+  color: #ffe0b0 !important;
+  box-shadow: inset 0 1px 0 rgba(255,220,180,0.2), 0 2px 8px rgba(0,0,0,0.2) !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 3px !important;
+}
+body.era-industrial .btn {
+  background: linear-gradient(145deg, #d08050, #b06838, #9a5830) !important;
+  border-color: rgba(255,190,130,0.4) !important;
+  color: #fff8f0 !important;
+  box-shadow: 0 2px 12px rgba(240,140,50,0.35), inset 0 1px 0 rgba(255,220,180,0.18) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 2px !important;
+  font-weight: 800 !important;
+}
+body.era-industrial .btn:hover {
+  background: linear-gradient(145deg, #e09060, #c07848, #b06838) !important;
+  box-shadow: 0 4px 16px rgba(240,140,50,0.5), inset 0 1px 0 rgba(255,220,180,0.25) !important;
+}
+body.era-industrial h1 {
+  font-family: var(--font-heading) !important;
+  font-size: 2.4rem !important;
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+  background: linear-gradient(180deg, #ffd8b0, #f0b878);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 8px rgba(240,160,80,0.4));
+  line-height: 1.15;
+}
+body.era-industrial h2 {
+  font-family: var(--font-heading) !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  background: linear-gradient(180deg, #f8d0a0, #e8b878);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 1px 6px rgba(240,160,80,0.3));
+}
+body.era-industrial p.subtitle {
+  color: #e8c8b0 !important;
+}
+body.era-industrial p.narrative {
+  color: #f8e8d8 !important;
+  font-weight: 500 !important;
+}
+
+/* ================================================================
+   ERA 2 — CONVEYOR BELT PUZZLE (Industrial Age theme)
+   ================================================================ */
+
+/* --- Bins row (drop targets) --- */
+.bins-row {
+  display: flex; gap: 6px; width: 100%; max-width: 380px;
+  margin: 1px auto; justify-content: center; flex-wrap: wrap;
+}
+.bin {
+  flex: 1; min-width: 80px; max-width: 110px;
+  background: linear-gradient(165deg, rgba(80,50,35,0.3), rgba(50,30,20,0.4));
+  border: 2px dashed rgba(200,120,80,0.15);
+  border-radius: var(--radius);
+  padding: 4px; text-align: center;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.2);
+  min-height: 68px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.bin.drag-over {
+  background-color: rgba(200, 150, 80, 0.25);
+  transform: scale(1.04);
+}
+.bin.correct-drop {
+  animation: bin-success 0.4s ease;
+  border-style: solid;
+  border-color: rgba(160,200,100,0.2);
+}
+.bin.wrong-drop {
+  animation: bin-shake 0.35s ease;
+}
+
+@keyframes bin-success {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.12); background-color: rgba(80,200,120,0.3); }
+  100% { transform: scale(1); }
+}
+@keyframes bin-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.bin-icon { font-size: 1.2rem; margin-bottom: 1px; }
+.bin-title { font-size: .6rem; font-weight: 700; color: var(--text-bright); text-transform: uppercase; letter-spacing: .05em; }
+.bin-desc { font-size: .5rem; color: #9a8a7a; line-height: 1.2; margin: 1px 0 2px; }
+.bin-result { min-height: 16px; font-size: .55rem; margin-top: 1px; }
+.bin-filled {
+  display: inline-block;
+  background: rgba(80,200,120,0.15);
+  color: #6ade80; font-weight: 700;
+  padding: 1px 6px; border-radius: 3px;
+  border: 1px solid rgba(80,200,120,0.15);
+  animation: popIn .35s cubic-bezier(.34,1.56,.64,1);
+}
+
+/* --- Conveyor Belt Track --- */
+.conveyor-track {
+  position: relative;
+  width: 100%; max-width: 380px;
+  height: 72px;
+  margin: 4px auto;
+  background: repeating-linear-gradient(
+    90deg,
+    #2a1f1a 0px, #2a1f1a 38px,
+    #3d2e24 38px, #3d2e24 40px
+  );
+  background-size: 40px 100%;
+  animation: belt-scroll 0.8s linear infinite;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: inset 0 3px 8px rgba(0,0,0,0.4), 0 2px 6px rgba(0,0,0,0.3);
+}
+
+@keyframes belt-scroll {
+  from { background-position: 0 0; }
+  to { background-position: -40px 0; }
+}
+
+/* --- Belt Items (materials traveling) --- */
+.belt-items {
+  position: relative;
+  width: 100%; height: 100%;
+}
+
+.belt-item {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: travel linear forwards;
+  cursor: grab;
+  transition: transform 0.15s ease;
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  background: linear-gradient(145deg, #4a3a2a, #3a2a1a);
+  border: 1px solid rgba(200,120,80,0.15);
+  border-radius: 6px;
+  padding: 4px 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
+  user-select: none;
+  min-width: 64px;
+  z-index: 2;
+}
+.belt-item:hover {
+  transform: translateY(-50%) scale(1.08);
+}
+.belt-item.grabbed {
+  cursor: grabbing;
+  transition: none;
+  z-index: 100;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.belt-item.pressing {
+  cursor: grabbing;
+  transform: translateY(-50%) scale(0.95);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3), inset 0 2px 4px rgba(0,0,0,0.2);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+@keyframes travel {
+  from { left: -80px; }
+  to { left: 100%; }
+}
+
+.belt-icon { font-size: 1.5rem; line-height: 1; }
+.belt-label { font-size: .5rem; color: #d0b090; white-space: nowrap; font-weight: 600; }
+
+/* Conveyor status */
+.conveyor-status {
+  font-size: .75rem; color: #8a7a6a; text-align: center;
+  min-height: 20px; margin-top: 2px;
+}
+
+.auto-page .speed-tag {
+  margin-bottom: 6px; font-size: .6rem; padding: 2px 10px;
+}
+.auto-page .narrative { font-size: .8rem; margin-bottom: 4px; }
+
+/* --- Automation (match cards reused) --- */
+.auto-match-grid {
+  display: flex; gap: 8px; justify-content: center;
+  margin: 10px auto; max-width: 420px; flex-wrap: wrap;
+}
+.auto-match-card {
+  width: 120px; padding: 12px 8px;
+  background: linear-gradient(165deg, rgba(60,40,30,0.4), rgba(40,25,15,0.5));
+  border: 1px solid rgba(200,120,80,0.06);
+  border-radius: var(--radius);
+  text-align: center;
+}
+.auto-match-card .match-icon { font-size: 1.6rem; }
+.auto-match-card .match-title { font-size: .65rem; }
+.auto-match-card .match-result { min-height: 20px; }
+.auto-match-card .match-pending { color: #5a4a3a; font-size: .65rem; }
+.auto-match-card .match-filled {
+  background: linear-gradient(135deg, rgba(180,100,60,0.12), rgba(160,80,40,0.08));
+  color: #c08050;
+}
+
+/* --- Conveyor belt visual in automation page --- */
+.auto-conveyor {
+  width: 100%;
+  max-width: 400px;
+  height: 28px;
+  margin: 14px auto 0;
+  position: relative;
+  background: repeating-linear-gradient(90deg, #3a2a1a 0px, #3a2a1a 28px, #4a3a2a 28px, #4a3a2a 30px);
+  background-size: 30px 100%;
+  border-radius: 6px;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.03);
+  overflow: hidden;
+  border: 1px solid rgba(200,120,80,0.1);
+}
+.auto-conveyor .conveyor-strip {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 200%;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, #8a7050 0px, #8a7050 8px, transparent 8px, transparent 16px);
+  transform: translateY(-50%);
+  animation: belt-scroll 0.5s linear infinite;
+  opacity: 0.5;
+}
+.auto-conveyor .conveyor-roller {
+  position: absolute;
+  top: 50%;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #7a5a4a, #3a2a1a);
+  border: 1px solid rgba(200,120,80,0.15);
+  box-shadow: inset 0 1px 2px rgba(255,200,150,0.08), 0 1px 4px rgba(0,0,0,0.3);
+  transform: translateY(-50%);
+}
+.auto-conveyor .conveyor-roller.left { left: 6px; }
+.auto-conveyor .conveyor-roller.right { right: 6px; }
+
+/* ================================================================
+   CSS Robot Arm — cartoon factory style
+   Beige body, yellow joints, blue cable, cyan accents.
+   Anchored inside auto-page, reaches across the card grid.
+   ================================================================ */
+.robot-arm {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
+  transition: left 0.5s cubic-bezier(.34,.56,.64,1);
+}
+
+/* Base / pedestal */
+.arm-base {
+  width: 44px;
+  height: 14px;
+  background: linear-gradient(145deg, #e0d5c8, #b8a898);
+  border: 2px solid #6a5a4a;
+  border-radius: 6px 6px 4px 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  position: relative;
+}
+.arm-base::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 6px; right: 6px;
+  height: 4px;
+  background: linear-gradient(145deg, #c0b0a0, #907a6a);
+  border-radius: 0 0 3px 3px;
+  border: 1px solid #6a5a4a;
+  border-top: none;
+}
+.base-light {
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 4px #4ade80, 0 0 8px rgba(74,222,128,0.3);
+  animation: basePulse 2s ease infinite;
+}
+@keyframes basePulse {
+  0%,100% { opacity: 1; box-shadow: 0 0 4px #4ade80, 0 0 8px rgba(74,222,128,0.3); }
+  50% { opacity: 0.6; box-shadow: 0 0 2px #4ade80; }
+}
+
+/* Lower arm segment */
+.arm-segment {
+  width: 10px;
+  height: 44px;
+  background: linear-gradient(90deg, #d8cdbf 0%, #e8ddd0 40%, #d8cdbf 100%);
+  border: 2px solid #6a5a4a;
+  border-radius: 4px;
+  position: relative;
+}
+.arm-segment::before {
+  content: "";
+  position: absolute;
+  top: 6px; left: 0px;
+  width: 5px; height: 10px;
+  background: linear-gradient(180deg, #70d4e8, #50b8d0);
+  border-radius: 2px;
+  border: 1px solid #3a8a9a;
+}
+
+/* Joint (yellow circle with bolt) */
+.arm-joint {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #f4cc44, #d4a820);
+  border: 2px solid #6a5a4a;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.3);
+  position: relative;
+  z-index: 2;
+}
+.arm-joint::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: #8a7040;
+  border: 1px solid #6a5a4a;
+}
+
+/* Upper arm segment */
+.arm-forearm {
+  width: 8px;
+  height: 36px;
+  background: linear-gradient(90deg, #d8cdbf 0%, #e8ddd0 40%, #d8cdbf 100%);
+  border: 2px solid #6a5a4a;
+  border-radius: 4px;
+  position: relative;
+}
+.arm-forearm::before {
+  content: "";
+  position: absolute;
+  top: 5px; right: 0px;
+  width: 4px; height: 8px;
+  background: linear-gradient(180deg, #70d4e8, #50b8d0);
+  border-radius: 2px;
+  border: 1px solid #3a8a9a;
+}
+
+/* Blue cable / hose */
+.arm-cable {
+  width: 6px;
+  background: linear-gradient(90deg, #3854a8, #4870c8, #3854a8);
+  border: 1px solid #2a3a80;
+  border-radius: 3px;
+  transition: height 0.4s cubic-bezier(.34,.56,.64,1);
+  min-height: 0;
+  box-shadow: 1px 0 3px rgba(0,0,0,0.15);
+}
+
+/* Gripper (two-pronged claw) */
+.arm-gripper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+.gripper-jaw {
+  width: 10px;
+  height: 14px;
+  background: linear-gradient(145deg, #f4cc44, #d4a820);
+  border: 2px solid #6a5a4a;
+  border-radius: 3px 3px 2px 2px;
+  transition: transform 0.2s ease;
+  transform-origin: top center;
+}
+.gripper-jaw.left {
+  border-radius: 3px 0 2px 4px;
+  transform: rotate(-8deg);
+}
+.gripper-jaw.right {
+  border-radius: 0 3px 4px 2px;
+  transform: rotate(8deg);
+}
+.gripper-jaw.open.left { transform: rotate(-22deg); }
+.gripper-jaw.open.right { transform: rotate(22deg); }
+
+/* Material floating above gripper */
+.hand-material {
+  font-size: 1.3rem;
+  opacity: 0;
+  transition: opacity 0.25s;
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 0 6px rgba(255,200,100,0.3));
+  z-index: 3;
+}
+
+/* Speed / motion lines */
+.arm-motion-lines {
+  position: absolute;
+  top: 0; right: -16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.arm-motion-lines.active { opacity: 0.4; }
+.arm-motion-lines span {
+  display: block;
+  height: 2px;
+  background: #8a7a6a;
+  border-radius: 1px;
+}
+.arm-motion-lines span:nth-child(1) { width: 10px; }
+.arm-motion-lines span:nth-child(2) { width: 14px; }
+.arm-motion-lines span:nth-child(3) { width: 8px; }
+

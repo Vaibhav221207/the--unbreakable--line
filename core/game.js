@@ -6,15 +6,12 @@ window.Game = {
   automationTimers: [],
   simRunning: false,
   draggedIngredient: null,
-  tapSelectedIngredient: null,
-  pressureState: null
+  tapSelectedIngredient: null
 };
 
 Object.assign(window.Game, (() => {
   const $ = id => document.getElementById(id);
   const app = document.getElementById('app');
-  const UI = window.UIRenderer;
-  const PE = window.PuzzleEngine;
 
   function render(html) { app.innerHTML = html; }
 
@@ -23,7 +20,7 @@ Object.assign(window.Game, (() => {
   function appendToBody(html) { document.body.insertAdjacentHTML("beforeend", html); }
 
   function showNarrative() {
-    render(UI.renderNarrative(Game.currentEra));
+    render(window.UIRenderer.renderNarrative(Game.currentEra));
   }
 
   function launchPuzzle() {
@@ -43,27 +40,27 @@ Object.assign(window.Game, (() => {
       Game.launchPrintPuzzle();
       return;
     }
-    Game.state = PE.createState(Game.currentEra);
-    render(UI.renderPuzzle(Game.currentEra));
-    UI.syncPicker(Game.currentEra, Game.state);
-    UI.syncProgress(Game.state);
+    Game.state = window.PuzzleEngine.createState(Game.currentEra);
+    render(window.UIRenderer.renderPuzzle(Game.currentEra));
+    window.UIRenderer.syncPicker(Game.currentEra, Game.state);
+    window.UIRenderer.syncProgress(Game.state);
     Game.setupTouch();
   }
 
   function showAutomation() {
     const cel = $("celebration");
     if (cel) cel.remove();
-    appendToBody(UI.renderAutomation(Game.currentEra));
+    appendToBody(window.UIRenderer.renderAutomation(Game.currentEra));
     if (Game.currentEra.puzzleType === "matching") {
-      UI.runMatchingAutomation(Game.currentEra);
+      window.UIRenderer.runMatchingAutomation(Game.currentEra);
     } else if (Game.currentEra.puzzleType === "balance") {
-      UI.runBalanceAutomation(Game.currentEra);
+      window.UIRenderer.runBalanceAutomation(Game.currentEra);
     } else if (Game.currentEra.puzzleType === "blueprint") {
-      UI.runBlueprintAutomation(Game.currentEra);
+      window.UIRenderer.runBlueprintAutomation(Game.currentEra);
     } else if (Game.currentEra.puzzleType === "print") {
-      UI.runPrintAutomation(Game.currentEra);
+      window.UIRenderer.runPrintAutomation(Game.currentEra);
     } else {
-      UI.runAutomationTimeline(Game.currentEra);
+      window.UIRenderer.runAutomationTimeline(Game.currentEra);
     }
   }
 
@@ -71,7 +68,7 @@ Object.assign(window.Game, (() => {
     const ap = $("auto-page");
     if (ap) ap.remove();
     const hasNext = Game.eraIndex + 1 < ERA_DATA.length;
-    render(UI.renderEndOfDemo(Game.currentEra, hasNext));
+    render(window.UIRenderer.renderEndOfDemo(Game.currentEra, hasNext));
   }
 
   function init() {
@@ -79,7 +76,7 @@ Object.assign(window.Game, (() => {
     Game.currentEra = ERA_DATA[Game.eraIndex];
     Game.state = null;
     updateTheme();
-    render(UI.renderIntro(Game.currentEra));
+    render(window.UIRenderer.renderIntro(Game.currentEra));
     showDevBar();
   }
 
@@ -103,7 +100,7 @@ Object.assign(window.Game, (() => {
     Game.state = null;
     Game.touchSelected = null;
     updateTheme();
-    render(UI.renderIntro(Game.currentEra));
+    render(window.UIRenderer.renderIntro(Game.currentEra));
   }
 
   function restart() {
@@ -144,7 +141,7 @@ Object.assign(window.Game, (() => {
     Game.state = null;
     Game.touchSelected = null;
     updateTheme();
-    render(UI.renderIntro(Game.currentEra));
+    render(window.UIRenderer.renderIntro(Game.currentEra));
   }
 
   return {

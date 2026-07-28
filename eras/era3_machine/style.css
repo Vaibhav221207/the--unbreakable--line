@@ -1,0 +1,530 @@
+/* === Era 3 — Machine Age theme overrides === */
+body.era-machine {
+  --bg1: #1e2840;
+  --bg2: #304060;
+  --bg3: #263450;
+  --surface: rgba(140,180,220,0.1);
+  --border: rgba(180,220,255,0.2);
+  --border-hover: rgba(200,235,255,0.35);
+  --stone-light: #c0d8f0;
+  --stone-mid: #98c0e0;
+  --stone-dark: #78a0c8;
+  --text: #eaf2ff;
+  --text-dim: #c8d8f0;
+  --text-bright: #d8ecff;
+  --accent: #d8ecff;
+  --success: #60d0e0;
+  --danger: #e86050;
+  --font-heading: 'Segoe UI Light', 'Helvetica Neue Light', 'Arial', sans-serif;
+  --font-body: 'Segoe UI', 'Arial', sans-serif;
+}
+body.era-machine {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 20%, #405888 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 90%, #283868 0%, transparent 50%),
+    linear-gradient(170deg, #1e2840 0%, #304060 30%, #263450 60%, #1e2840 100%) !important;
+}
+body.era-machine::before {
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 30%, rgba(180,225,255,0.22), transparent),
+    radial-gradient(1px 1px at 40% 70%, rgba(180,225,255,0.16), transparent),
+    radial-gradient(2px 2px at 60% 20%, rgba(180,225,255,0.14), transparent),
+    radial-gradient(1px 1px at 80% 50%, rgba(180,225,255,0.18), transparent) !important;
+}
+body.era-machine::after {
+  background: radial-gradient(ellipse 40% 25% at 70% 85%, rgba(120,200,255,0.14), transparent 70%) !important;
+  animation: machinePulse 4s ease-in-out infinite !important;
+}
+@keyframes machinePulse {
+  0%,100% { opacity:0.4; } 50% { opacity:0.8; }
+}
+body.era-machine .era-badge {
+  background: linear-gradient(135deg, #5a7aa8, #3a5a88) !important;
+  border-color: rgba(180,225,255,0.35) !important;
+  color: #d0e8ff !important;
+  box-shadow: inset 0 1px 0 rgba(200,235,255,0.18), 0 2px 8px rgba(0,0,0,0.2) !important;
+  letter-spacing: 4px !important;
+  font-weight: 300 !important;
+}
+body.era-machine .btn {
+  background: linear-gradient(145deg, #6a8ab8, #4a6a98, #385888) !important;
+  border-color: rgba(180,225,255,0.35) !important;
+  color: #eaf2ff !important;
+  box-shadow: 0 2px 12px rgba(100,180,255,0.35), inset 0 1px 0 rgba(200,235,255,0.15) !important;
+  letter-spacing: 2px !important;
+  font-weight: 600 !important;
+}
+body.era-machine .btn:hover {
+  background: linear-gradient(145deg, #7a9ac8, #5a7aa8, #4a6a98) !important;
+  box-shadow: 0 4px 16px rgba(100,180,255,0.5), inset 0 1px 0 rgba(200,235,255,0.2) !important;
+}
+body.era-machine h1 {
+  font-family: var(--font-heading) !important;
+  font-size: 2.5rem !important;
+  letter-spacing: 4px !important;
+  font-weight: 200 !important;
+  background: linear-gradient(180deg, #d8ecff, #a8c8f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 10px rgba(120,200,255,0.35));
+  line-height: 1.15;
+}
+body.era-machine h2 {
+  font-family: var(--font-heading) !important;
+  letter-spacing: 3px !important;
+  font-weight: 200 !important;
+  background: linear-gradient(180deg, #c8dff8, #98c0e8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 1px 8px rgba(120,200,255,0.25));
+}
+body.era-machine p.subtitle {
+  color: #c8d8f0 !important;
+  font-weight: 300 !important;
+  letter-spacing: 1px !important;
+}
+body.era-machine p.narrative {
+  color: #d8e8ff !important;
+  font-weight: 300 !important;
+}
+
+/* ---- Machine Age automation (steel-works control room) ---- */
+.auto-machine {
+  background: radial-gradient(ellipse at 50% 0%, #141e2e 0%, #080e18 100%) !important;
+}
+.machine-frame {
+  position: relative;
+  background: linear-gradient(170deg, #0c1422, #0a101c);
+  border: 1px solid rgba(80,140,200,0.12);
+  border-radius: 12px;
+  padding: 8px 14px 10px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow:
+    inset 0 0 60px rgba(40,80,140,0.04),
+    0 0 40px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(60,120,180,0.06) inset;
+  overflow: hidden;
+}
+.machine-scanline {
+  position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px, transparent 2px,
+    rgba(60,140,220,0.015) 2px, rgba(60,140,220,0.015) 4px
+  );
+  animation: scanlineScroll 8s linear infinite;
+}
+@keyframes scanlineScroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100px; }
+}
+.machine-header {
+  display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;
+}
+.machine-led {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #48e878; box-shadow: 0 0 6px #48e878, 0 0 12px rgba(72,232,120,0.3);
+  animation: ledPulse 2s ease-in-out infinite;
+}
+#auto-led { animation-delay: .3s; }
+@keyframes ledPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .3; }
+}
+.machine-badge {
+  font-size: .6rem; font-weight: 800; letter-spacing: 3px; color: #4a7a9a;
+  text-transform: uppercase;
+}
+.machine-icon { font-size: 3.2rem; margin-bottom: 4px; }
+.machine-era {
+  background: linear-gradient(135deg, #2a4a6a, #16263a) !important;
+  border-color: rgba(80,160,220,0.12) !important;
+  color: #7aacce !important;
+}
+.machine-narr { color: #7a8a9a !important; font-size: .85rem !important; }
+.machine-specs {
+  display: flex; gap: 8px; justify-content: center; margin-bottom: 4px;
+}
+.spec-item {
+  font-size: .5rem; font-weight: 700; color: #5a7a9a; letter-spacing: 1px;
+  background: rgba(40,80,140,0.08); padding: 1px 8px; border-radius: 2px;
+  border: 1px solid rgba(60,120,180,0.06);
+}
+.auto-machine .bridge-visual {
+  max-width: 180px; height: 64px; margin: 3px auto; transform: scale(0.85);
+}
+.machine-readout {
+  display: flex; flex-direction: column; align-items: center; gap: 1px; margin: 2px auto;
+}
+.auto-machine .torque-bars { height: 32px; margin: 1px auto; }
+.auto-machine .torque-fill-wrap { height: 22px; }
+.machine-val { font-family: 'Courier New', monospace !important; color: #e8b84a !important; font-size: .7rem !important; }
+.auto-machine .balance-gauge { max-width: 140px; margin: 2px auto; }
+.auto-machine .gauge-bubble { left: 50%; }
+.machine-scene {
+  font-size: .6rem; color: #5a7a9a; min-height: 14px; letter-spacing: 2px; margin: 1px 0;
+  font-family: 'Courier New', monospace;
+}
+.machine-status { color: #6a8aaa !important; font-size: .75rem !important; }
+.machine-msg {
+  display: none; max-width: 400px; margin: 6px auto 4px; padding: 6px 12px;
+  border-radius: 6px; background: rgba(40,80,140,0.08);
+  border: 1px solid rgba(60,120,180,0.06); color: #7a9ab8; line-height: 1.6; font-size: .85rem;
+}
+.btn-steel {
+  display: none; margin-top: 10px; font-size: .85rem; font-weight: 700; padding: 8px 22px;
+  background: linear-gradient(135deg, #2a4a6a, #1a3050); color: #8abce0;
+  border: 1px solid rgba(80,160,220,0.15); border-radius: 4px; cursor: pointer;
+}
+.btn-steel:hover { background: linear-gradient(135deg, #3a5a7a, #2a4a6a); color: #aad4f0; }
+
+/* ================================================================
+   ERA 3 — BALANCED CANTILEVER BRIDGE (Machine Age)
+   ================================================================ */
+
+/* --- Bridge Visual --- */
+.bridge-visual {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+  height: 80px;
+  margin: 4px auto;
+  overflow: visible;
+}
+
+/* Bridge deck (horizontal beam) */
+.bridge-deck {
+  position: absolute;
+  bottom: 40px;
+  left: 5%; right: 5%;
+  height: 16px;
+  display: flex;
+  align-items: stretch;
+  transform-origin: center bottom;
+  transition: transform .15s ease;
+  z-index: 2;
+}
+
+/* Central pier */
+.pier {
+  width: 20px;
+  min-width: 20px;
+  background: linear-gradient(90deg, #4a5a6a, #5a7a8a, #4a5a6a);
+  border: 2px solid #2a3a4a;
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+  box-shadow: inset 0 2px 4px rgba(180,210,240,0.06), 0 -2px 6px rgba(0,0,0,0.2);
+  position: relative;
+  z-index: 3;
+}
+.pier::after {
+  content: '';
+  position: absolute;
+  bottom: -28px;
+  left: -30%;
+  right: -30%;
+  height: 28px;
+  background: linear-gradient(90deg, #3a4a5a, #4a5a6a, #3a4a5a);
+  border: 2px solid #2a3a4a;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  z-index: 1;
+}
+
+/* Cantilever arms */
+.arm-left, .arm-right {
+  flex: 1;
+  position: relative;
+  background: #2a3a4a;
+  border: 2px solid #1a2a3a;
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 0;
+}
+.arm-left {
+  border-right: none;
+  border-radius: 3px 0 0 3px;
+}
+.arm-right {
+  border-left: none;
+  border-radius: 0 3px 3px 0;
+}
+
+/* Arm fill (shows extension level) */
+.arm-fill {
+  position: absolute;
+  top: 0; bottom: 0;
+  background: linear-gradient(90deg, #5a8aaa, #4a7a9a, #3a6a8a);
+  box-shadow: inset 0 1px 0 rgba(180,220,255,0.1);
+  transition: width .15s ease;
+  border-radius: inherit;
+}
+#arm-fill-left, #auto-arm-fill-left {
+  right: 0;
+}
+#arm-fill-right, #auto-arm-fill-right {
+  left: 0;
+}
+
+/* Gorge gap visuals */
+.bridge-gap, .bridge-gap-right {
+  position: absolute;
+  bottom: 0;
+  height: 50px;
+  width: 8%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px, transparent 6px,
+    rgba(100,160,220,0.04) 6px, rgba(100,160,220,0.04) 7px
+  );
+  border-left: 1px dashed rgba(100,160,220,0.08);
+  border-right: 1px dashed rgba(100,160,220,0.08);
+}
+.bridge-gap { left: 2%; }
+.bridge-gap-right { right: 2%; }
+
+/* --- Torque Bars (visual moment comparison) --- */
+.torque-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  max-width: 220px;
+  margin: 2px auto;
+  height: 40px;
+}
+.torque-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  flex: 1;
+}
+.torque-fill-wrap {
+  width: 100%;
+  max-width: 44px;
+  height: 28px;
+  background: rgba(40,60,90,0.15);
+  border: 1px solid rgba(100,150,200,0.1);
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+.torque-fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(0deg, #4a7a9a, #5a9aba);
+  border-radius: 0 0 2px 2px;
+  transition: height .15s ease, background .2s;
+  min-height: 0;
+}
+.torque-fill.balanced {
+  background: linear-gradient(0deg, #30b050, #50d070);
+}
+.torque-fill.heavier {
+  background: linear-gradient(0deg, #b04030, #d06040);
+}
+.torque-val {
+  font-size: .6rem;
+  font-weight: 700;
+  color: #6a8aaa;
+  font-variant-numeric: tabular-nums;
+}
+.torque-label {
+  font-size: .5rem;
+  font-weight: 700;
+  color: #4a6a7a;
+  letter-spacing: 1px;
+  align-self: center;
+  padding-bottom: 4px;
+}
+
+/* Bridge spec labels */
+.bridge-specs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 240px;
+  margin: 1px auto;
+  font-size: .55rem;
+  color: #6a8aaa;
+  font-weight: 600;
+  letter-spacing: .03em;
+}
+.bridge-specs span:nth-child(2) {
+  color: #5a7a8a;
+  font-size: .5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* --- Balance Gauge (bubble level) --- */
+.balance-gauge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 3px auto;
+  max-width: 180px;
+}
+.gauge-label {
+  font-size: .5rem;
+  font-weight: 700;
+  color: #5a7a8a;
+  letter-spacing: 2px;
+}
+.gauge-track {
+  position: relative;
+  flex: 1;
+  height: 16px;
+  background: linear-gradient(180deg, #1a2a3a, #0e1824);
+  border: 1px solid #2a3a4a;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+}
+.gauge-track::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+  height: 1px;
+  background: rgba(100,160,220,0.08);
+  transform: translateY(-50%);
+}
+.gauge-bubble {
+  position: absolute;
+  top: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #e8c840, #c8a820);
+  border: 1px solid #8a7020;
+  box-shadow: 0 0 6px rgba(200,180,40,0.2), inset 0 1px 2px rgba(255,255,255,0.2);
+  transition: left .15s ease;
+  margin-left: -7px;
+}
+.gauge-bubble.balanced {
+  background: radial-gradient(circle at 40% 35%, #60e880, #30c050);
+  border-color: #209030;
+  box-shadow: 0 0 8px rgba(60,220,80,0.3), inset 0 1px 2px rgba(255,255,255,0.2);
+}
+
+/* --- Scene Info --- */
+.scene-info {
+  font-size: .8rem;
+  color: #8898b0;
+  text-align: center;
+  margin: 4px auto;
+  min-height: 20px;
+  max-width: 340px;
+  line-height: 1.3;
+}
+
+/* --- Lever Panel (sliders styled as industrial levers) --- */
+.lever-panel {
+  width: 100%;
+  max-width: 280px;
+  margin: 4px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.lever-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(40,60,90,0.2), rgba(20,30,50,0.3));
+  border: 1px solid rgba(100,150,200,0.1);
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+.lever-label {
+  font-size: .6rem;
+  font-weight: 700;
+  color: #8098b8;
+  min-width: 60px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.fixed-label {
+  color: #e8b84a;
+  font-size: .65rem;
+  letter-spacing: .02em;
+  text-transform: none;
+  min-width: 0;
+}
+.lever-track {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+.lever-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, #1a2a3a, #3a5a7a);
+  border-radius: 3px;
+  outline: none;
+  border: 1px solid rgba(100,150,200,0.15);
+  cursor: pointer;
+  transition: background .2s;
+}
+.lever-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 28px;
+  background: linear-gradient(145deg, #6a8aaa, #4a6a8a, #3a5a7a);
+  border: 2px solid #2a3a5a;
+  border-radius: 4px;
+  cursor: grab;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3), inset 0 1px 0 rgba(180,210,240,0.1);
+  transition: transform .1s;
+}
+.lever-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.08);
+}
+.lever-slider::-moz-range-thumb {
+  width: 20px;
+  height: 28px;
+  background: linear-gradient(145deg, #6a8aaa, #4a6a8a, #3a5a7a);
+  border: 2px solid #2a3a5a;
+  border-radius: 4px;
+  cursor: grab;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3), inset 0 1px 0 rgba(180,210,240,0.1);
+}
+.lever-slider:active::-webkit-slider-thumb {
+  cursor: grabbing;
+  transform: scale(0.95);
+}
+.lever-slider:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.lever-slider:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+  background: linear-gradient(145deg, #4a5a6a, #3a4a5a);
+  box-shadow: inset 0 0 0 2px rgba(200,160,80,0.15);
+}
+.lever-slider:disabled::-moz-range-thumb {
+  cursor: not-allowed;
+  background: linear-gradient(145deg, #4a5a6a, #3a4a5a);
+  box-shadow: inset 0 0 0 2px rgba(200,160,80,0.15);
+}
+
+.lever-thumb-label {
+  font-size: .75rem;
+  font-weight: 700;
+  color: #90b0d0;
+  min-width: 28px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+

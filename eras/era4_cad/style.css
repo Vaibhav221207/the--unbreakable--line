@@ -1,0 +1,411 @@
+/* === Era 4 — CAD / Blueprint theme overrides === */
+body.era-cad {
+  --bg1: #0a0e1a;
+  --bg2: #101a2e;
+  --bg3: #0c1424;
+  --surface: rgba(80,180,240,0.08);
+  --border: rgba(80,180,240,0.18);
+  --border-hover: rgba(80,200,255,0.4);
+  --text: #d0e8f8;
+  --text-dim: #80b0d0;
+  --text-bright: #80d8f8;
+  --accent: #60d0f0;
+  --success: #60d0e0;
+  --danger: #f06060;
+  --font-heading: 'Courier New', 'Consolas', 'Lucida Console', monospace;
+  --font-body: 'Segoe UI', 'Consolas', monospace;
+}
+body.era-cad {
+  background:
+    radial-gradient(ellipse 100% 60% at 50% 20%, #0a1a3e 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 80% 90%, #0a1a2e 0%, transparent 50%),
+    linear-gradient(170deg, #0a0e1a 0%, #101a2e 30%, #0c1424 60%, #0a0e1a 100%) !important;
+}
+body.era-cad::before {
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(80,180,240,0.06) 24px, rgba(80,180,240,0.06) 25px),
+    repeating-linear-gradient(90deg, transparent, transparent 24px, rgba(80,180,240,0.06) 24px, rgba(80,180,240,0.06) 25px) !important;
+}
+body.era-cad::after {
+  display: none !important;
+}
+body.era-cad .era-badge {
+  background: linear-gradient(135deg, #1a3a5a, #0a2a4a) !important;
+  border-color: rgba(80,180,240,0.3) !important;
+  color: #80d0f0 !important;
+  box-shadow: inset 0 0 12px rgba(80,180,240,0.06), 0 0 20px rgba(40,80,160,0.15) !important;
+}
+body.era-cad .btn {
+  background: linear-gradient(145deg, #1a3a5a, #0e2844) !important;
+  border-color: rgba(80,180,240,0.25) !important;
+  color: #b0e0ff !important;
+  box-shadow: 0 0 16px rgba(60,160,240,0.15), inset 0 1px 0 rgba(80,180,240,0.12) !important;
+  font-family: 'Courier New', monospace !important;
+}
+body.era-cad .btn:hover {
+  background: linear-gradient(145deg, #224a6a, #123454) !important;
+  box-shadow: 0 0 24px rgba(60,160,240,0.25), inset 0 1px 0 rgba(80,200,255,0.2) !important;
+}
+body.era-cad h1 {
+  font-family: var(--font-heading) !important;
+  font-size: 1.4rem !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  background: linear-gradient(180deg, #80d8f8, #40a0d0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 16px rgba(60,160,240,0.3));
+}
+body.era-cad h2 {
+  font-family: var(--font-heading) !important;
+  letter-spacing: 1px !important;
+  color: #80c8e8 !important;
+  -webkit-text-fill-color: #80c8e8 !important;
+  background: none !important;
+  filter: none !important;
+}
+body.era-cad p.subtitle {
+  font-family: var(--font-body) !important;
+  color: #6090b0 !important;
+}
+body.era-cad p.narrative {
+  font-family: var(--font-body) !important;
+  color: #70a0c0 !important;
+}
+
+/* === Era 4 — Blueprint Simulator === */
+.bp-params {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-width: 400px;
+  margin: 6px auto;
+}
+.bp-param {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(20,40,80,0.15);
+  border: 1px solid rgba(80,180,240,0.08);
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+.bp-param-label {
+  font-family: 'Courier New', monospace;
+  font-size: .6rem;
+  font-weight: 700;
+  color: #60a0c0;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  min-width: 72px;
+}
+.bp-toggle-group {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+.bp-toggle {
+  flex: 1;
+  padding: 6px 4px;
+  font-size: .6rem;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  background: rgba(10,20,40,0.5);
+  border: 1px solid rgba(80,180,240,0.1);
+  border-radius: 4px;
+  color: #6090b0;
+  cursor: pointer;
+  transition: all .15s;
+  text-align: center;
+  touch-action: manipulation;
+}
+.bp-toggle:hover {
+  background: rgba(40,80,140,0.2);
+  border-color: rgba(80,180,240,0.2);
+  color: #90c8e0;
+}
+.bp-toggle.active {
+  background: rgba(40,120,200,0.2);
+  border-color: rgba(80,200,255,0.4);
+  color: #a0e0ff;
+  box-shadow: inset 0 0 12px rgba(60,160,240,0.08), 0 0 8px rgba(60,160,240,0.1);
+}
+.bp-toggle-error {
+  border-color: rgba(240,80,80,0.4) !important;
+  background: rgba(200,40,40,0.12) !important;
+  color: #f08080 !important;
+  animation: bpErrorPulse .6s ease-in-out 3;
+}
+@keyframes bpErrorPulse {
+  0%,100% { box-shadow: inset 0 0 4px rgba(240,80,80,0.1); }
+  50% { box-shadow: inset 0 0 16px rgba(240,80,80,0.2), 0 0 12px rgba(240,80,80,0.1); }
+}
+
+/* Simulation area */
+.bp-sim-area {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  height: 120px;
+  margin: 6px auto;
+  background: rgba(8,12,24,0.6);
+  border: 1px solid rgba(80,180,240,0.08);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.bp-structure {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+}
+.bp-ground {
+  width: 200px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, rgba(80,180,240,0.2), transparent);
+  margin-left: -60px;
+}
+.bp-building {
+  width: 80px;
+  height: 90px;
+  background: linear-gradient(180deg, rgba(80,180,240,0.06), rgba(80,180,240,0.02));
+  border: 1px solid rgba(80,180,240,0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 4px;
+  transition: transform .3s;
+  transform-origin: bottom center;
+}
+.bp-floor {
+  height: 24px;
+  border: 1px solid rgba(80,180,240,0.06);
+  border-radius: 1px;
+  background: rgba(80,180,240,0.03);
+}
+.bp-building.bp-shake {
+  animation: bpShake .1s ease-in-out 12;
+}
+.bp-building.bp-sway {
+  animation: bpSway .3s ease-in-out 6;
+}
+.bp-building.bp-crack {
+  animation: bpCrack .15s ease-in-out 8;
+}
+@keyframes bpShake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+@keyframes bpSway {
+  0%,100% { transform: rotate(0deg); }
+  25% { transform: rotate(2deg); }
+  75% { transform: rotate(-2deg); }
+}
+@keyframes bpCrack {
+  0%,100% { transform: translateX(0) scaleY(1); }
+  25% { transform: translateX(-1px) scaleY(0.98); }
+  75% { transform: translateX(1px) scaleY(0.99); }
+}
+
+/* Run simulation button */
+.bp-run-btn {
+  margin: 6px auto;
+  padding: 8px 32px;
+  font-size: .75rem;
+}
+.bp-run-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Result area */
+.bp-result {
+  width: 100%;
+  max-width: 400px;
+  margin: 4px auto;
+  min-height: 40px;
+}
+.bp-success {
+  text-align: center;
+  animation: bpFadeIn .3s ease;
+}
+.bp-success-icon {
+  font-size: 2rem;
+  margin-bottom: 6px;
+}
+.bp-success-text {
+  font-size: .75rem;
+  color: #80c0e0;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  font-family: 'Segoe UI', sans-serif;
+}
+.bp-next-btn {
+  margin-top: 4px;
+}
+.bp-failure {
+  text-align: center;
+  animation: bpFadeIn .2s ease;
+}
+.bp-failure-icon {
+  font-size: 2.5rem;
+  margin-bottom: 6px;
+}
+.bp-failure-title {
+  font-size: .9rem;
+  font-weight: 700;
+  color: #f06060;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+}
+.bp-errors {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.bp-error {
+  font-size: .78rem;
+  color: #c0d8e8;
+  line-height: 1.5;
+  padding: 6px 10px;
+  background: rgba(200,40,40,0.06);
+  border-left: 2px solid rgba(240,80,80,0.3);
+  border-radius: 2px;
+}
+.bp-error-label {
+  font-weight: 700;
+  color: #f09090;
+  font-family: 'Courier New', monospace;
+}
+.bp-retry-btn {
+  margin-top: 0;
+  font-size: .85rem;
+  padding: 8px 28px;
+}
+.bp-retry-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8,12,24,0.7);
+  z-index: 10;
+  border-radius: 6px;
+  animation: bpFadeIn .2s ease;
+}
+@keyframes bpFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Blueprint terminal */
+.bp-terminal {
+  width: 100%;
+  max-width: 420px;
+  margin: 10px auto;
+  border: 1px solid rgba(80,180,240,0.15);
+  border-radius: 6px;
+  background: rgba(5,10,20,0.85);
+  overflow: hidden;
+}
+.bp-term-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  background: rgba(20,40,60,0.5);
+  border-bottom: 1px solid rgba(80,180,240,0.1);
+}
+.bp-term-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.bp-term-dot.r { background: #e55; }
+.bp-term-dot.y { background: #da3; }
+.bp-term-dot.g { background: #5c5; }
+.bp-term-title {
+  margin-left: 6px;
+  font-family: "Courier New", monospace;
+  font-size: .6rem;
+  color: rgba(160,200,230,0.5);
+}
+.bp-term-body {
+  height: 160px;
+  overflow-y: auto;
+  padding: 8px 10px;
+  font-family: "Courier New", monospace;
+  font-size: .62rem;
+  line-height: 1.6;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80,180,240,0.2) transparent;
+}
+.bp-term-body::-webkit-scrollbar { width: 4px; }
+.bp-term-body::-webkit-scrollbar-thumb { background: rgba(80,180,240,0.2); border-radius: 2px; }
+.bp-term-line {
+  white-space: pre;
+}
+.bp-term-fail { color: rgba(200,120,120,0.7); }
+.bp-term-pass { color: rgba(120,220,160,0.85); }
+.bp-term-success { color: #60e89a; margin-top: 4px; }
+.bp-term-dim { color: rgba(120,160,200,0.35); margin-top: 4px; }
+.bp-term-cursor {
+  display: inline;
+  margin-left: 2px;
+  color: #80d0f0;
+  animation: termBlink .6s step-end infinite;
+}
+@keyframes termBlink {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Popup banner overlay */
+.auto-banner {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(4,8,16,0.82);
+  z-index: 9990;
+  align-items: center;
+  justify-content: center;
+  animation: bpFadeIn .35s ease;
+}
+.auto-banner-inner {
+  background: linear-gradient(140deg, #0d1f35, #0a1828);
+  border: 1px solid rgba(80,180,240,0.25);
+  border-radius: 12px;
+  padding: 30px 36px;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(80,200,255,0.08), inset 0 1px 0 rgba(80,200,255,0.08);
+}
+.auto-banner-icon {
+  font-size: 2.8rem;
+  margin-bottom: 8px;
+}
+.auto-banner-title {
+  font-family: "Courier New", monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #60e89a;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.auto-banner-msg {
+  font-size: .75rem;
+  color: rgba(180,210,235,0.7);
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+

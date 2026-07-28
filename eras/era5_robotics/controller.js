@@ -2,78 +2,6 @@ Object.assign(window.Game, (() => {
   const $ = id => document.getElementById(id);
   const app = document.getElementById('app');
 
-  function cancelPressure() {
-    if (Game.pressureState) {
-      Game.pressureState.active = false;
-      document.removeEventListener("pointerup", onPressureRelease);
-      const gauge = $("pr-pressure-gauge");
-      if (gauge) gauge.style.display = "none";
-      Game.pressureState = null;
-    }
-  }
-
-  function onPressureRelease(e) {
-    if (!Game.pressureState || !Game.pressureState.active) return;
-    Game.pressureState.active = false;
-    document.removeEventListener("pointerup", onPressureRelease);
-
-    const elapsed = Date.now() - Game.pressureState.startTime;
-    const pct = Math.min(100, (elapsed / Game.pressureState.fillDuration) * 100);
-
-    const gauge = $("pr-pressure-gauge");
-    if (gauge) gauge.style.display = "none";
-
-    if (pct >= 35 && pct <= 65) {
-      const result = window.PrintEngine.addIngredient(Game.currentEra, Game.state, Game.pressureState.scenarioId, Game.pressureState.ingredientId);
-      Game.draggedIngredient = null;
-      handleIngredientResult(Game.pressureState.scenarioId, result);
-    } else {
-      Game.draggedIngredient = null;
-      const hint = $("pr-chamber-hint");
-      if (hint) {
-        hint.textContent = pct < 35
-          ? "⚠️ Not enough pressure — bond too weak. Try holding longer."
-          : "⚠️ Too much pressure — bond fractured. Try releasing sooner.";
-      }
-    }
-    Game.pressureState = null;
-  }
-
-  function showPressureGauge(scenarioId, ingredientId) {
-    const gauge = $("pr-pressure-gauge");
-    const fill = $("pr-pressure-fill");
-    const readout = $("pr-pressure-readout");
-    if (!gauge) return;
-
-    Game.pressureState = {
-      ingredientId, scenarioId,
-      startTime: Date.now(),
-      fillDuration: 1800,
-      active: true
-    };
-
-    gauge.style.display = "block";
-    if (fill) fill.style.width = "0%";
-    if (readout) readout.textContent = "0%";
-
-    function updateFill() {
-      if (!Game.pressureState || !Game.pressureState.active) return;
-      const elapsed = Date.now() - Game.pressureState.startTime;
-      const pct = Math.min(100, (elapsed / Game.pressureState.fillDuration) * 100);
-      if (fill) fill.style.width = pct + "%";
-      if (readout) readout.textContent = Math.round(pct) + "%";
-      if (fill) {
-        fill.style.background = (pct >= 35 && pct <= 65)
-          ? "linear-gradient(90deg, #60d0b0, #80f0d0)"
-          : "linear-gradient(90deg, rgba(100,220,200,0.2), rgba(100,220,200,0.8))";
-      }
-      if (pct < 100) requestAnimationFrame(updateFill);
-    }
-    requestAnimationFrame(updateFill);
-
-    document.addEventListener("pointerup", onPressureRelease);
-  }
-
   function handleIngredientResult(scenarioId, result) {
     if (!result.ok && result.reason === "full") {
       const hint = $("pr-chamber-hint");
@@ -116,7 +44,6 @@ Object.assign(window.Game, (() => {
     event.dataTransfer.effectAllowed = "copy";
     Game.tapSelectedIngredient = null;
     document.querySelectorAll(".pr-ingredient").forEach(el => el.classList.remove("selected"));
-    cancelPressure();
   }
 
   function onPrintDragEnd() {
@@ -130,19 +57,13 @@ Object.assign(window.Game, (() => {
     Game.tapSelectedIngredient = null;
     document.querySelectorAll(".pr-ingredient").forEach(el => el.classList.remove("selected"));
 
-    const c = window.PrintEngine.getChamber(Game.state, scenarioId);
-    if (c.ingredients.length >= 2) {
-      const hint = $("pr-chamber-hint");
-      if (hint) hint.textContent = "Chamber is full — click it to clear and try again";
-      Game.draggedIngredient = null;
-      return;
-    }
-    showPressureGauge(scenarioId, Game.draggedIngredient);
+    const result = window.PrintEngine.addIngredient(Game.currentEra, Game.state, scenarioId, Game.draggedIngredient);
+    Game.draggedIngredient = null;
+    handleIngredientResult(scenarioId, result);
   }
 
   function onPrintIngredientTap(ingredientId) {
     Game.draggedIngredient = null;
-    cancelPressure();
     Game.tapSelectedIngredient = (Game.tapSelectedIngredient === ingredientId) ? null : ingredientId;
     document.querySelectorAll(".pr-ingredient").forEach(el => {
       el.classList.toggle("selected", el.dataset.id === Game.tapSelectedIngredient);
@@ -362,6 +283,6 @@ Object.assign(window.Game, (() => {
   }
 
   return {
-    cancelPressure, onPressureRelease, showPressureGauge, handleIngredientResult, launchPrintPuzzle, onPrintDragStart, onPrintDragEnd, onPrintDrop, onPrintIngredientTap, onPrintChamberClick, onPrintToPattern, onPrintPattern, onPrintToPrint, onPrintBuild, onPrintNext, onPrintRetry
+    handleIngredientResult, launchPrintPuzzle, onPrintDragStart, onPrintDragEnd, onPrintDrop, onPrintIngredientTap, onPrintChamberClick, onPrintToPattern, onPrintPattern, onPrintToPrint, onPrintBuild, onPrintNext, onPrintRetry
   };
 })());

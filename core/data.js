@@ -1,0 +1,1 @@
+window.ERA_DATA = [];
