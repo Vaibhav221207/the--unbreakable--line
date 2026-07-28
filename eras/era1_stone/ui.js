@@ -4,13 +4,14 @@ Object.assign(window.UIRenderer, (() => {
   function renderPuzzle(era) {
     // Generate positioned stone slots — x,y,w,h as percentages of parent
     const slotHtml = era.pieces.map(p => {
-      return `<div class="stone-slot" id="${p.slot}" data-pnp-slot="${p.slot}" data-slot="${p.slot}"
-        style="left:${p.x - p.w/2}%;top:${p.y - p.h/2}%;width:${p.w}%;height:${p.h}%;--r:${p.rot}deg"></div>`;
+      return `<div class="stone-slot" id="${p.slot}" data-slot="${p.slot}"
+        style="left:${p.x - p.w/2}%;top:${p.y - p.h/2}%;width:${p.w}%;height:${p.h}%;--r:${p.rot}deg"
+        onclick="Game.onSlotClick('${p.slot}')"></div>`;
     }).join("");
 
     // Picker grid — shape preview per type
     const pickerHtml = era.pieces.map(p =>
-      `<button class="pick-btn pnp-item" id="pick-${p.id}" data-pnp-id="${p.id}" data-type="${p.type}">
+      `<button class="pick-btn" id="pick-${p.id}" data-type="${p.type}" onclick="Game.onPieceClick('${p.id}')">
         <div class="shape-preview shape-${p.type}"></div>
         <span>${p.label}</span>
       </button>`
@@ -20,7 +21,7 @@ Object.assign(window.UIRenderer, (() => {
       ${window.UIRenderer.floatingHTML(era)}
       <div class="era-badge"><span>🪨</span> Era ${era.id} — ${era.label}</div>
       <h2>Build the Arch</h2>
-      <div class="arch-stage pnp-drop" id="arch-stage">
+      <div class="arch-stage" id="arch-stage">
         ${slotHtml}
       </div>
       <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
@@ -28,7 +29,7 @@ Object.assign(window.UIRenderer, (() => {
       <div class="material-picker">
         <h3>🔨 Quarry</h3>
         <div class="picker-grid">${pickerHtml}</div>
-        <div class="pick-hint">Drag a stone onto the arch, or tap one then tap its slot</div>
+        <div class="pick-hint">Tap a stone → tap its place on the arch</div>
       </div>
     </div>`;
   }
