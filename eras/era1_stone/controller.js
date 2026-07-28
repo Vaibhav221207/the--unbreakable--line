@@ -1,32 +1,8 @@
 Object.assign(window.Game, (() => {
   const $ = id => document.getElementById(id);
-  const app = document.getElementById('app');
-
-  function onPieceClick(pieceId) {
-    if (!Game.state || Game.state.locked) return;
-    const piece = window.PuzzleEngine.getPiece(Game.currentEra, pieceId);
-    if (!piece || Game.state.placed.has(pieceId)) return;
-
-    Game.state.selected = (Game.state.selected === pieceId) ? null : pieceId;
-    if (Game.state.selected) {
-      window.UIRenderer.showHint(`Selected ${piece.label}. Now tap a slot.`);
-    } else {
-      window.UIRenderer.clearHint();
-    }
-    window.UIRenderer.syncPicker(Game.currentEra, Game.state);
-  }
-
-  function onSlotClick(slotId) {
-    if (!Game.state || Game.state.locked) return;
-    if (!Game.state.selected) {
-      window.UIRenderer.shakeSlot(slotId);
-      window.UIRenderer.showHint(Game.currentEra.hints.noPick);
-      return;
-    }
-    attemptPlacement(Game.state.selected, slotId);
-  }
 
   function attemptPlacement(pieceId, slotId) {
+    if (!Game.state || Game.state.locked) return;
     const validation = window.PuzzleEngine.validate(Game.currentEra, Game.state, pieceId, slotId);
     if (!validation.ok) {
       window.UIRenderer.shakeSlot(slotId);
@@ -46,27 +22,68 @@ Object.assign(window.Game, (() => {
     }
   }
 
-  function setupTouch() {
-    document.querySelector(".picker-grid")?.addEventListener("touchstart", e => {
-      const btn = e.target.closest(".pick-btn");
-      if (btn && !btn.classList.contains("placed")) {
-        const pid = btn.id.replace("pick-", "");
-        document.querySelectorAll(".pick-btn.touch-sel").forEach(b => b.classList.remove("touch-sel"));
-        btn.classList.add("touch-sel");
-        Game.touchSelected = pid;
-        window.UIRenderer.showHint("Tap a slot to place the stone.");
-      }
-    }, { passive: true });
+  function onPieceClick(pieceId) {
+    if (!Game.state || Game.state.locked) return;
+    const piece = window.PuzzleEngine.getPiece(Game.currentEra, pieceId);
+    if (!piece || Game.state.placed.has(pieceId)) return;
+    Game.state.selected = (Game.state.selected === pieceId) ? null : pieceId;
+    if (Game.state.selected) {
+      window.UIRenderer.showHint(`Selected ${piece.label}. Now tap a slot.`);
+    } else {
+      window.UIRenderer.clearHint();
+    }
+    window.UIRenderer.syncPicker(Game.currentEra, Game.state);
+  }
 
-    document.querySelector(".arch-stage")?.addEventListener("touchstart", e => {
-      const slot = e.target.closest(".stone-slot");
-      if (slot && Game.touchSelected && !slot.classList.contains("filled")) {
-        e.preventDefault();
-        attemptPlacement(Game.touchSelected, slot.id);
-        Game.touchSelected = null;
-        document.querySelectorAll(".pick-btn.touch-sel").forEach(b => b.classList.remove("touch-sel"));
+  function onSlotClick(slotId) {
+    if (!Game.state || Game.state.locked) return;
+    if (!Game.state.selected) {
+      window.UIRenderer.shakeSlot(slotId);
+      window.UIRenderer.showHint(Game.currentEra.hints.noPick);
+      return;
+    }
+    attemptPlacement(Game.state.selected, slotId);
+  }
+
+  function setupTouch() {
+    window.PickNPlace.setup({
+      pickerContainer: '.picker-grid',
+      pickerItemSelector: '.pick-btn',
+      dropZoneSelector: '.arch-stage',
+      getItemId: el => el.id.replace('pick-', ''),
+      getSlotId: el => el.dataset.pnpSlot || el.dataset.slot,
+      getIcon: el => {
+        const id = el.id.replace('pick-', '');
+        const piece = Game.currentEra.pieces.find(p => p.id === id);
+        return piece ? piece.icon : '🪨';
+      },
+      onSelect(id) {
+        if (!Game.state || Game.state.locked) return;
+        const piece = window.PuzzleEngine.getPiece(Game.currentEra, id);
+        if (!piece || Game.state.placed.has(id)) return;
+        if (Game.state.selected === id) {
+          Game.state.selected = null;
+          window.UIRenderer.clearHint();
+        } else {
+          Game.state.selected = id;
+          window.UIRenderer.showHint(`Selected ${piece.label}. Now tap a slot.`);
+        }
+        window.UIRenderer.syncPicker(Game.currentEra, Game.state);
+      },
+      onPlace(id, slotId) {
+        attemptPlacement(id, slotId);
       }
-    }, { passive: false });
+    });
+  }
+      },
+      onTap(id) {
+        if (Game.state && Game.state.selected === id) {
+          Game.state.selected = null;
+          window.UIRenderer.clearHint();
+          window.UIRenderer.syncPicker(Game.currentEra, Game.state);
+        }
+      }
+    });
   }
 
   return {

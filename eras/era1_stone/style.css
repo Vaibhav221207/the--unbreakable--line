@@ -300,6 +300,8 @@
   width: 24px; height: 22px;
   background: linear-gradient(165deg, #c8ad90, #a08060, #7a5a3e);
 }
+.pick-btn { cursor: grab; }
+.pick-btn:active { cursor: grabbing; }
 .pick-btn.selected, .pick-btn:hover {
   border-color: var(--border-hover);
   background: linear-gradient(145deg, rgba(160,120,80,0.2), rgba(100,70,50,0.2));
@@ -308,4 +310,5 @@
 .pick-btn.placed { opacity: 0.2; pointer-events: none; transform: none !important; filter: grayscale(0.8); }
 .pick-btn.touch-sel { border-color: var(--border-hover); background: rgba(160,120,80,0.15); transform: translateY(-1px); }
 .pick-hint { font-size: .7rem; color: #8a7a70; margin-top: 3px; min-height: 1.2em; text-align: center; }
+.arch-stage.pnp-drag-over { outline: 2px dashed rgba(200,160,100,0.4); outline-offset: 6px; background: rgba(200,160,100,0.04); border-radius: 8px; }
 
