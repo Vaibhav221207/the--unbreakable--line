@@ -6,7 +6,8 @@ window.UIRenderer = (() => {
       1: ["rock","spark","leaf","rock","spark","leaf"],
       2: ["gear","bolt","smoke","gear","rivet","bolt"],
       3: ["beam","hex","dot","beam","hex","dot"],
-      5: ["dot","hex","spark","dot","hex","spark"]
+      5: ["dot","hex","spark","dot","hex","spark"],
+      6: ["leaf","dot","leaf","dot","leaf","dot"]
     };
     const pool = shapeSets[era.id] || shapeSets[1];
     const cols = 4, rows = 3;
@@ -48,7 +49,7 @@ window.UIRenderer = (() => {
       <h2>${era.icon} ${era.label}</h2>
       <p class="narrative">${era.narrative.scene}</p>
       <p class="narrative" style="color:var(--stone-light);font-style:italic;">${era.narrative.quest}</p>
-      <button class="btn" onclick="Game.launchPuzzle()">Start Building</button>
+      <button class="btn" onclick="Game.launchPuzzle()">${era.narrative.btn || "Start Building"}</button>
     </div>`;
   }
 

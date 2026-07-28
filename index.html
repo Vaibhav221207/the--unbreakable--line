@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="eras/era3_machine/style.css">
 <link rel="stylesheet" href="eras/era4_cad/style.css">
 <link rel="stylesheet" href="eras/era5_robotics/style.css">
+<link rel="stylesheet" href="eras/era6_boundary/style.css">
 </head>
 <body>
 <div id="app"></div>
@@ -51,6 +52,12 @@
 <script src="eras/era5_robotics/ui.js"></script>
 <script src="eras/era5_robotics/controller.js"></script>
 
+<!-- ERA 6 -->
+<script src="eras/era6_boundary/data.js"></script>
+<script src="eras/era6_boundary/engine.js"></script>
+<script src="eras/era6_boundary/ui.js"></script>
+<script src="eras/era6_boundary/controller.js"></script>
+
 <!-- Inline handler shims -->
 <script>
   window.showNarrative = Game.showNarrative;
@@ -80,6 +87,9 @@
   window.onPrintBuild = Game.onPrintBuild;
   window.onPrintNext = Game.onPrintNext;
   window.onPrintRetry = Game.onPrintRetry;
+  window.onBoundaryNext = Game.onBoundaryNext;
+  window.onBoundaryCardToggle = Game.onBoundaryCardToggle;
+  window.onBoundaryDone = Game.onBoundaryDone;
 
   // Bootstrap
   document.addEventListener("DOMContentLoaded", () => {

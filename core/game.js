@@ -40,6 +40,10 @@ Object.assign(window.Game, (() => {
       Game.launchPrintPuzzle();
       return;
     }
+    if (Game.currentEra.puzzleType === "boundary") {
+      Game.launchBoundaryPuzzle();
+      return;
+    }
     Game.state = window.PuzzleEngine.createState(Game.currentEra);
     render(window.UIRenderer.renderPuzzle(Game.currentEra));
     window.UIRenderer.syncPicker(Game.currentEra, Game.state);
@@ -59,6 +63,8 @@ Object.assign(window.Game, (() => {
       window.UIRenderer.runBlueprintAutomation(Game.currentEra);
     } else if (Game.currentEra.puzzleType === "print") {
       window.UIRenderer.runPrintAutomation(Game.currentEra);
+    } else if (Game.currentEra.puzzleType === "boundary") {
+      // Boundary era integrates automation into its flow
     } else {
       window.UIRenderer.runAutomationTimeline(Game.currentEra);
     }
@@ -81,7 +87,7 @@ Object.assign(window.Game, (() => {
   }
 
   function updateTheme() {
-    document.body.classList.remove("era-stone", "era-industrial", "era-machine", "era-cad", "era-robotics");
+    document.body.classList.remove("era-stone", "era-industrial", "era-machine", "era-cad", "era-robotics", "era-boundary");
     if (Game.currentEra && Game.currentEra.id === 2) {
       document.body.classList.add("era-industrial");
     } else if (Game.currentEra && Game.currentEra.id === 3) {
@@ -90,6 +96,8 @@ Object.assign(window.Game, (() => {
       document.body.classList.add("era-cad");
     } else if (Game.currentEra && Game.currentEra.id === 5) {
       document.body.classList.add("era-robotics");
+    } else if (Game.currentEra && Game.currentEra.id === 6) {
+      document.body.classList.add("era-boundary");
     }
   }
 
