@@ -151,9 +151,11 @@ Object.assign(window.Game, (() => {
 
   function onPrintChamberClick(scenarioId) {
     if (Game.tapSelectedIngredient) {
-      showPressureGauge(scenarioId, Game.tapSelectedIngredient);
+      const ingId = Game.tapSelectedIngredient;
       Game.tapSelectedIngredient = null;
       document.querySelectorAll(".pr-ingredient").forEach(el => el.classList.remove("selected"));
+      const result = window.PrintEngine.addIngredient(Game.currentEra, Game.state, scenarioId, ingId);
+      handleIngredientResult(scenarioId, result);
       return;
     }
     const c = window.PrintEngine.getChamber(Game.state, scenarioId);
