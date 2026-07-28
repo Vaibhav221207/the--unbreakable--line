@@ -157,8 +157,6 @@ Object.assign(window.Game, (() => {
 
       if (runBtn) runBtn.disabled = false;
       Game.simRunning = false;
-      // Re-enable toggles
-      document.querySelectorAll(".bp-toggle").forEach(t => t.style.pointerEvents = "");
       statusEl.textContent = "";
 
       if (result.ok) {

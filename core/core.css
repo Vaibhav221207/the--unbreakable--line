@@ -651,7 +651,7 @@ p.narrative { font-size: .85rem; line-height: 1.5; max-width: 420px; margin-bott
   display: none; position: fixed; inset: 0; z-index: 200; flex-direction: column;
   align-items: center; justify-content: safe center; text-align: center; padding: 12px;
   background: linear-gradient(170deg, #1e2840 0%, #2a3858 40%, #223050 100%);
-  overflow-y: auto; opacity: 0; transition: opacity .7s ease;
+  overflow: hidden; opacity: 0; transition: opacity .7s ease;
 }
 .auto-page::-webkit-scrollbar { width: 6px; }
 .auto-page::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 3px; }
