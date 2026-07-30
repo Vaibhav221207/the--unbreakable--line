@@ -120,11 +120,13 @@ body.era-boundary .btn:hover {
 /* Fade-in lines */
 .bnd-fade {
   opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
   animation: bndFade 1.2s ease forwards;
 }
 @keyframes bndFade {
-  0% { opacity: 0; transform: translateY(12px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% { opacity: 0; transform: translateY(12px); visibility: hidden; pointer-events: none; }
+  100% { opacity: 1; transform: translateY(0); visibility: visible; pointer-events: auto; }
 }
 
 .bnd-line {

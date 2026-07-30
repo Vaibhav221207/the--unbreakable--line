@@ -132,6 +132,7 @@ Object.assign(window.Game, (() => {
 
   function onPrintBuild(scenarioId) {
     Game.busy = true;
+    if (window.AudioSystem) AudioSystem.startBeltHum();
     const printBtn = $("pr-print-btn");
     const statusEl = $("pr-print-status");
     const layers = document.querySelectorAll(".pr-layer");
@@ -216,6 +217,7 @@ Object.assign(window.Game, (() => {
         layer++;
         if (layer >= totalLayers) {
           clearInterval(layerInterval);
+          if (window.AudioSystem) AudioSystem.stopBeltHum();
           if (head) head.style.display = "none";
           if (bedPlate) {
             bedPlate.style.background = patternId === "honeycomb"

@@ -19,7 +19,6 @@
 
 <!-- CORE -->
 <script src="core/data.js"></script>
-<script src="core/picknplace.js"></script>
 <script src="core/audio.js"></script>
 <script src="core/ui.js"></script>
 <script src="core/game.js"></script>
@@ -68,7 +67,6 @@
   window.finishEra = Game.finishEra;
   window.restart = Game.restart;
   window.nextEra = Game.nextEra;
-  window.jumpToEra = Game.jumpToEra;
   window.render = Game.render;
   window.append = Game.append;
   window.appendToBody = Game.appendToBody;
@@ -95,8 +93,7 @@
 
   // Bootstrap
   document.addEventListener("DOMContentLoaded", () => {
-    console.log("[Game] Loading…");
-    try { Game.init(); console.log("[Game] Ready"); }
+    try { Game.init(); }
     catch (e) {
       console.error("[Game] Init error:", e);
       document.getElementById("app").innerHTML =

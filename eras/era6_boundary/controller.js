@@ -2,9 +2,12 @@ Object.assign(window.Game, (() => {
   function launchBoundaryPuzzle() {
     Game.state = window.BoundaryEngine.createState();
     Game.render(window.UIRenderer.renderBoundaryScreen1(Game.currentEra));
+    if (window.AudioSystem) AudioSystem.startBeltHum();
+    setTimeout(() => { if (window.AudioSystem) AudioSystem.stopBeltHum(); }, 7000);
   }
 
   function onBoundaryNext() {
+    if (window.AudioSystem) AudioSystem.stopBeltHum();
     AudioSystem.playSound('tap');
     const era = Game.currentEra;
     const st = Game.state;
@@ -14,6 +17,7 @@ Object.assign(window.Game, (() => {
     } else if (st.screen === 2) {
       Game.render(window.UIRenderer.renderBoundaryScreen3(era, st));
     } else if (st.screen === 3) {
+      document.body.classList.add("body-bookend");
       Game.render(window.UIRenderer.renderBoundaryScreen4(era));
     }
   }

@@ -466,9 +466,51 @@ window.UIRenderer = (() => {
     </div>`;
   }
 
+  function bookendFloatingHTML() {
+    const shapes = ["rock","spark","gear","bolt","beam","hex","dot"];
+    const cols = 4, rows = 3;
+    const cellW = 100 / cols, cellH = 100 / rows;
+    let html = `<div class="floating-bg">`;
+    let idx = 0;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const shape = shapes[idx % shapes.length];
+        const l = (c * cellW + cellW * 0.15 + Math.random() * cellW * 0.7).toFixed(1);
+        const t = (r * cellH + cellH * 0.15 + Math.random() * cellH * 0.7).toFixed(1);
+        const d = (Math.random() * 12).toFixed(1);
+        const dur = (8 + Math.random() * 10).toFixed(1);
+        const s = (0.4 + Math.random() * 0.6).toFixed(1);
+        html += `<div class="fi shape-${shape}" style="left:${l}%;top:${t}%;--sz:${s};animation-delay:${d}s;animation-duration:${dur}s"></div>`;
+        idx++;
+      }
+    }
+    return html + `</div>`;
+  }
+
+  function renderTitleScreen() {
+    return `<div class="screen active screen-bookend">
+      ${bookendFloatingHTML()}
+      <div style="font-size:3.5rem;margin-bottom:6px;opacity:0.25;letter-spacing:8px">🪨 ⚙️ 🔧 🤖</div>
+      <h1 class="bookend-title">The Unbreakable Boundary</h1>
+      <p class="bookend-subtitle">Six eras of tools. One builder. A line machines cannot cross.</p>
+      <p class="bookend-hook">From hand-carved stone to autonomous fabrication — each age brings a new kind of power, and a new kind of question.</p>
+      <button class="bookend-btn" onclick="Game.showNarrative()">Begin Your Journey →</button>
+    </div>`;
+  }
+
   function renderEndOfDemo(era, hasNextEra) {
-    const btnLabel = hasNextEra ? `Continue to Era ${era.id + 1} →` : "Replay from Era 1";
-    const btnAction = hasNextEra ? "Game.nextEra()" : "Game.restart()";
+    if (!hasNextEra) {
+      return `<div class="screen active screen-bookend">
+        ${bookendFloatingHTML()}
+        <div style="font-size:3.5rem;margin-bottom:6px;opacity:0.25;letter-spacing:8px">🪨 ⚙️ 🔧 🤖</div>
+        <h1 class="bookend-title" style="font-size:2rem">The Unbreakable Boundary</h1>
+        <p class="bookend-quote">"Every tool you've mastered stands ready. But the final build isn't about any of them — it's about what you choose to build, and why."</p>
+        <p class="bookend-subtitle" style="margin-top:10px">You built across six eras. The boundary held.</p>
+        <p class="bookend-ending">The End</p>
+        <button class="bookend-btn" onclick="Game.restart()" style="margin-top:8px">↻ Play Again</button>
+      </div>`;
+    }
+    const btnLabel = `Continue to Era ${era.id + 1} →`;
     return `<div class="screen active" style="padding-top:50px">
       ${floatingHTML(era)}
       <div style="font-size:4rem;margin-bottom:10px">🚀</div>
@@ -478,7 +520,7 @@ window.UIRenderer = (() => {
         <strong>The Unbreakable Boundary</strong> continues across ${6 - era.id} more eras.<br>
         Each brings a harder challenge — until Era 6, where only human imagination can find the answer.
       </p>
-      <button class="btn" onclick="${btnAction}">${btnLabel}</button>
+      <button class="btn" onclick="Game.nextEra()">${btnLabel}</button>
     </div>`;
   }
 
@@ -497,6 +539,6 @@ window.UIRenderer = (() => {
   }
 
   return {
-    floatingHTML, renderIntro, renderNarrative, renderCelebration, renderAutomation, renderEndOfDemo, showHint, clearHint
+    floatingHTML, bookendFloatingHTML, renderIntro, renderNarrative, renderCelebration, renderAutomation, renderEndOfDemo, renderTitleScreen, showHint, clearHint
   };
 })();

@@ -41,6 +41,7 @@ Object.assign(window.UIRenderer, (() => {
     // Clear any previous state
     stopConveyorBelt();
     _beltActive = true;
+    if (window.AudioSystem) AudioSystem.startBeltHum();
 
     // Spawn loop: tries to keep 2-4 items on belt
     function scheduleSpawn() {
@@ -63,6 +64,8 @@ Object.assign(window.UIRenderer, (() => {
       const onBelt = Array.from(container.children).map(el => el.dataset.matId);
       const count = onBelt.filter(id => id === mat.id).length;
       if (count >= 2) return;
+      // Cap total items on belt so it doesn't overflow while tab is hidden
+      if (container.children.length >= 8) return;
 
       const el = document.createElement("div");
       el.className = "belt-item";
@@ -213,9 +216,7 @@ Object.assign(window.UIRenderer, (() => {
   function stopConveyorBelt() {
     _beltActive = false;
     _beltDragged = null;
-    _beltTimers.forEach(t => {
-      if (typeof t === "number") clearTimeout(t);
-    });
+    _beltTimers.forEach(t => { if (typeof t === "number") clearTimeout(t); });
     const h = _beltTimers._handlers;
     if (h) {
       document.removeEventListener("mousedown", h.onPointerDown);
@@ -229,6 +230,7 @@ Object.assign(window.UIRenderer, (() => {
     // Clear remaining belt items
     const container = document.getElementById("belt-items");
     if (container) container.innerHTML = "";
+    if (window.AudioSystem) AudioSystem.stopBeltHum();
   }
 
   function fillBin(scenarioId, materialLabel) {

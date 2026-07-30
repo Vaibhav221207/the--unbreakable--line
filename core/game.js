@@ -3,7 +3,6 @@ window.Game = {
   state: null,
   currentEra: null,
   touchSelected: null,
-  automationTimers: [],
   simRunning: false,
   busy: false,
   draggedIngredient: null,
@@ -21,6 +20,7 @@ Object.assign(window.Game, (() => {
   function appendToBody(html) { document.body.insertAdjacentHTML("beforeend", html); }
 
   function showNarrative() {
+    document.body.classList.remove("body-bookend");
     render(window.UIRenderer.renderNarrative(Game.currentEra));
   }
 
@@ -83,8 +83,8 @@ Object.assign(window.Game, (() => {
     Game.currentEra = ERA_DATA[Game.eraIndex];
     Game.state = null;
     updateTheme();
-    render(window.UIRenderer.renderIntro(Game.currentEra));
-    showDevBar();
+    document.body.classList.add("body-bookend");
+    render(window.UIRenderer.renderTitleScreen());
     showMuteBtn();
     AudioSystem.init();
   }
@@ -112,7 +112,6 @@ Object.assign(window.Game, (() => {
     Game.touchSelected = null;
     updateTheme();
     render(window.UIRenderer.renderIntro(Game.currentEra));
-    AudioSystem.playMusic(Game.currentEra.id);
   }
 
   function restart() {
@@ -122,27 +121,6 @@ Object.assign(window.Game, (() => {
     Game.touchSelected = null;
     updateTheme();
     init();
-  }
-
-  function showDevBar() {
-    const existing = document.getElementById("dev-bar");
-    if (existing) existing.remove();
-    const bar = document.createElement("div");
-    bar.id = "dev-bar";
-    bar.innerHTML = ERA_DATA.map(e =>
-      `<button class="dev-btn" data-era="${e.id}">${e.icon} ${e.id}</button>`
-    ).join("") + `<button class="dev-btn dev-close" id="dev-close">✕</button>`;
-    Object.assign(bar.style, {
-      position: "fixed", bottom: "6px", left: "50%", transform: "translateX(-50%)",
-      zIndex: "9999", display: "flex", gap: "4px", padding: "4px 8px",
-      background: "rgba(0,0,0,0.7)", borderRadius: "6px",
-      border: "1px solid rgba(255,255,255,0.1)", backdropFilter: "blur(4px)"
-    });
-    document.body.appendChild(bar);
-    bar.querySelectorAll(".dev-btn:not(.dev-close)").forEach(btn => {
-      btn.onclick = () => jumpToEra(parseInt(btn.dataset.era));
-    });
-    document.getElementById("dev-close").onclick = () => bar.remove();
   }
 
   function showMuteBtn() {
@@ -165,19 +143,7 @@ Object.assign(window.Game, (() => {
     document.body.appendChild(btn);
   }
 
-  function jumpToEra(idx) {
-    const index = ERA_DATA.findIndex(e => e.id === idx);
-    if (index < 0) return;
-    Game.eraIndex = index;
-    Game.currentEra = ERA_DATA[Game.eraIndex];
-    Game.state = null;
-    Game.touchSelected = null;
-    updateTheme();
-    render(window.UIRenderer.renderIntro(Game.currentEra));
-    AudioSystem.playMusic(Game.currentEra.id);
-  }
-
   return {
-    render, append, appendToBody, showNarrative, launchPuzzle, showAutomation, finishEra, init, updateTheme, nextEra, restart, showDevBar, jumpToEra
+    render, append, appendToBody, showNarrative, launchPuzzle, showAutomation, finishEra, init, updateTheme, nextEra, restart
   };
 })());

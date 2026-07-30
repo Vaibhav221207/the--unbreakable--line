@@ -83,66 +83,13 @@ Object.assign(window.UIRenderer, (() => {
   }
 
   function renderBoundaryScreen4(era) {
-    return `<div class="screen active bnd-screen">
-      <div class="bnd-screen-inner">
-        <div class="bnd-closing-scene">
-          <div class="bnd-engineer">
-            <div class="bnd-eng-hardhat"></div>
-            <div class="bnd-eng-head">
-              <div class="bnd-eng-glasses">
-                <div class="bnd-eng-lens left"></div>
-                <div class="bnd-eng-lens right"></div>
-                <div class="bnd-eng-bridge"></div>
-              </div>
-              <div class="bnd-eng-eye left"></div>
-              <div class="bnd-eng-eye right"></div>
-              <div class="bnd-eng-smile"></div>
-            </div>
-            <div class="bnd-eng-body">
-              <div class="bnd-eng-collar"></div>
-              <div class="bnd-eng-pocket"></div>
-            </div>
-            <div class="bnd-eng-arm left"></div>
-            <div class="bnd-eng-arm right">
-              <div class="bnd-eng-blueprint"></div>
-            </div>
-            <div class="bnd-eng-legs">
-              <div class="bnd-eng-leg left"></div>
-              <div class="bnd-eng-leg right"></div>
-            </div>
-          </div>
-          <div class="bnd-closing-divider"></div>
-          <div class="bnd-automaton">
-            <div class="bnd-auto-antenna"></div>
-            <div class="bnd-auto-head">
-              <div class="bnd-auto-visor"></div>
-              <div class="bnd-auto-indicator"></div>
-            </div>
-            <div class="bnd-auto-body">
-              <div class="bnd-auto-vent"></div>
-              <div class="bnd-auto-bolt top"></div>
-              <div class="bnd-auto-bolt bottom"></div>
-            </div>
-            <div class="bnd-auto-arm left">
-              <div class="bnd-auto-joint"></div>
-            </div>
-            <div class="bnd-auto-arm right">
-              <div class="bnd-auto-joint"></div>
-            </div>
-            <div class="bnd-auto-base">
-              <div class="bnd-auto-wheel left"></div>
-              <div class="bnd-auto-wheel right"></div>
-            </div>
-          </div>
-        </div>
-        <div class="bnd-closing-text">
-          <p class="bnd-closing-line bnd-fade" style="animation-delay:0.5s">Automation didn't take the engineer's job.</p>
-          <p class="bnd-closing-line bnd-fade" style="animation-delay:2.2s">It took the repetitive parts —</p>
-          <p class="bnd-closing-line bnd-fade" style="animation-delay:4s">so the engineer could focus on the question only a human can answer:</p>
-          <p class="bnd-closing-line bnd-fade bnd-closing-emphasis" style="animation-delay:5.8s">what should we build, and who is it for?</p>
-        </div>
-        <button class="btn bnd-btn bnd-fade" style="animation-delay:8s;margin-top:32px" onclick="Game.onBoundaryDone()">Start over from Era 1</button>
-      </div>
+    return `<div class="screen active screen-bookend" style="justify-content:center;gap:0">
+      <p class="bookend-ending-reflect">"Every tool you've mastered stands ready. But the final build isn't about any of them — it's about what you choose to build, and why."</p>
+      <p class="bookend-ending-line">You built across six eras. The boundary held.</p>
+      <div class="bookend-ending-divider"></div>
+      <p class="bookend-ending-mark">The End</p>
+      <p class="bookend-ending-thanks">Thanks for playing.</p>
+      <span class="bookend-restart-link" onclick="Game.restart()">↻ begin again</span>
     </div>`;
   }
 
