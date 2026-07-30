@@ -9,20 +9,32 @@ typeof window !== 'undefined' && (window.AudioSystem = (() => {
   const MASTER_VOL = 0.25;
   const SFX_VOL = 0.35;
 
-  // Resume context when user returns to tab (fixes silent AudioContext)
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && ctx && ctx.state === 'suspended') ctx.resume();
-  });
-
+  // Create the context (browsers allow this, it starts suspended), then wait for
+  // a real user gesture before calling resume(). This avoids the autoplay error.
   function _ensure() {
-    if (!ctx) {
-      ctx = new (window.AudioContext || window.webkitAudioContext)();
-      masterGain = ctx.createGain();
-      masterGain.gain.value = _muted ? 0 : MASTER_VOL;
-      masterGain.connect(ctx.destination);
-    }
-    if (ctx.state === 'suspended') ctx.resume();
+    if (ctx) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = ctx.createGain();
+    masterGain.gain.value = _muted ? 0 : MASTER_VOL;
+    masterGain.connect(ctx.destination);
+    // Best-effort resume — succeeds if we're inside a user gesture handler
+    ctx.resume().catch(() => {});
+    // Also install unlock on first future gesture (for non-gesture creation)
+    const unlock = () => {
+      ctx.resume().then(() => {
+        if (Game.currentEra && !_muted) playMusic(Game.currentEra.id);
+      }).catch(() => {});
+    };
+    document.addEventListener('pointerdown', unlock, { capture: true, once: true });
+    document.addEventListener('keydown', unlock, { capture: true, once: true });
   }
+
+  // ── Visibility / keep-alive (silently catch resume failures) ──
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && ctx && ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
+    }
+  });
 
   // ---- SOUND EFFECTS ----
 
@@ -146,7 +158,7 @@ typeof window !== 'undefined' && (window.AudioSystem = (() => {
 
     // Ensure context stays alive — resume if browser suspended it
     function keepAlive() {
-      if (ctx.state === 'suspended') ctx.resume();
+      if (ctx.state === 'suspended') ctx.resume().catch(() => {});
     }
 
     // ── Single voice: oscillator + filter (for harsh types) + ADSR gain ──
@@ -445,7 +457,6 @@ typeof window !== 'undefined' && (window.AudioSystem = (() => {
 
   function init() {
     _ensure();
-    if (Game.currentEra && !_muted) playMusic(Game.currentEra.id);
   }
 
   return { init, playMusic, stopMusic: _stopMusic, playSound, toggleMute, isMuted, setVolume };
