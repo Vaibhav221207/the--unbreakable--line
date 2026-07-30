@@ -1,4 +1,4 @@
-window.AudioSystem = (() => {
+typeof window !== 'undefined' && (window.AudioSystem = (() => {
   let ctx = null;
   let masterGain = null;
   let _muted = false;
@@ -449,4 +449,4 @@ window.AudioSystem = (() => {
   }
 
   return { init, playMusic, stopMusic: _stopMusic, playSound, toggleMute, isMuted, setVolume };
-})();
+})());
