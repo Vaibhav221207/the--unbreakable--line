@@ -85,6 +85,8 @@ Object.assign(window.Game, (() => {
     updateTheme();
     render(window.UIRenderer.renderIntro(Game.currentEra));
     showDevBar();
+    showMuteBtn();
+    AudioSystem.init();
   }
 
   function updateTheme() {
@@ -110,6 +112,7 @@ Object.assign(window.Game, (() => {
     Game.touchSelected = null;
     updateTheme();
     render(window.UIRenderer.renderIntro(Game.currentEra));
+    AudioSystem.playMusic(Game.currentEra.id);
   }
 
   function restart() {
@@ -142,6 +145,26 @@ Object.assign(window.Game, (() => {
     document.getElementById("dev-close").onclick = () => bar.remove();
   }
 
+  function showMuteBtn() {
+    const existing = document.getElementById("mute-btn");
+    if (existing) existing.remove();
+    const btn = document.createElement("button");
+    btn.id = "mute-btn";
+    btn.textContent = AudioSystem.isMuted() ? "🔇" : "🔊";
+    Object.assign(btn.style, {
+      position: "fixed", top: "10px", right: "10px", zIndex: "10000",
+      background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.15)",
+      borderRadius: "6px", padding: "4px 10px", cursor: "pointer",
+      fontSize: "1.1rem", lineHeight: "1", color: "#ccc",
+      backdropFilter: "blur(4px)", fontFamily: "sans-serif"
+    });
+    btn.onclick = () => {
+      AudioSystem.toggleMute();
+      btn.textContent = AudioSystem.isMuted() ? "🔇" : "🔊";
+    };
+    document.body.appendChild(btn);
+  }
+
   function jumpToEra(idx) {
     const index = ERA_DATA.findIndex(e => e.id === idx);
     if (index < 0) return;
@@ -151,6 +174,7 @@ Object.assign(window.Game, (() => {
     Game.touchSelected = null;
     updateTheme();
     render(window.UIRenderer.renderIntro(Game.currentEra));
+    AudioSystem.playMusic(Game.currentEra.id);
   }
 
   return {

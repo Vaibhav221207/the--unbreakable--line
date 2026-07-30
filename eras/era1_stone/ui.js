@@ -112,6 +112,7 @@ Object.assign(window.UIRenderer, (() => {
       // Map s0→a0, s3→a3, etc.
       const autoId = "a" + piece.slot.slice(1);
       fillSlot(autoId, piece.icon, piece.id);
+      AudioSystem.playSound('whoosh');
 
       const status = $("auto-status");
       if (status) status.textContent = `Assembling… ${step + 1}/${order.length}`;

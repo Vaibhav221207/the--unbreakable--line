@@ -179,6 +179,7 @@ Object.assign(window.UIRenderer, (() => {
       );
       const label = `${c.foundation} + ${c.bracing} + ${c.material}`;
       addLine(`> ${label.padEnd(22)} ${isCorrect ? "✓ PASS" : "✗ FAIL"}`, isCorrect ? "bp-term-pass" : "bp-term-fail");
+      AudioSystem.playSound('whoosh');
       step++;
     }, era.automation.speed || 8);
   }

@@ -29,6 +29,7 @@ Object.assign(window.Game, (() => {
   function attemptPlacement(pieceId, slotId) {
     const validation = window.PuzzleEngine.validate(Game.currentEra, Game.state, pieceId, slotId);
     if (!validation.ok) {
+      AudioSystem.playSound('fail');
       window.UIRenderer.shakeSlot(slotId);
       window.UIRenderer.showHint(Game.currentEra.hints[validation.reason] || "Can't place that.");
       Game.state.selected = null;
@@ -37,6 +38,7 @@ Object.assign(window.Game, (() => {
     }
     const piece = window.PuzzleEngine.getPiece(Game.currentEra, pieceId);
     window.PuzzleEngine.commit(Game.state, pieceId);
+    AudioSystem.playSound('success');
     window.UIRenderer.fillSlot(slotId, piece.icon, piece.id);
     window.UIRenderer.syncPicker(Game.currentEra, Game.state);
     window.UIRenderer.syncProgress(Game.state);

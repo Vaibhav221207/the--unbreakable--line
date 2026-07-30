@@ -5,6 +5,7 @@ Object.assign(window.Game, (() => {
   }
 
   function onBoundaryNext() {
+    AudioSystem.playSound('tap');
     const era = Game.currentEra;
     const st = Game.state;
     window.BoundaryEngine.advanceScreen(st);
@@ -18,6 +19,7 @@ Object.assign(window.Game, (() => {
   }
 
   function onBoundaryCardToggle(cardId) {
+    AudioSystem.playSound('tap');
     const st = Game.state;
     const result = window.BoundaryEngine.togglePriority(st, cardId);
     if (!result.ok) return;

@@ -160,12 +160,14 @@ Object.assign(window.Game, (() => {
       statusEl.textContent = "";
 
       if (result.ok) {
+        AudioSystem.playSound('success');
         const isLast = Game.state.completed.size >= Game.currentEra.scenarios.length;
         window.UIRenderer.showBlueprintSuccess(Game.currentEra, Game.state, scenario, isLast);
         if (isLast) {
           setTimeout(() => window.Game.appendToBody(window.UIRenderer.renderCelebration(Game.currentEra)), 400);
         }
       } else {
+        AudioSystem.playSound('fail');
         window.UIRenderer.showBlueprintFailure(Game.currentEra, Game.state, scenario, result.errors);
       }
     }

@@ -14,6 +14,7 @@ Object.assign(window.Game, (() => {
   function handleBeltDrop(materialId, scenarioId) {
     const validation = window.MatchingEngine.validate(Game.currentEra, Game.state, materialId, scenarioId);
     if (!validation.ok) {
+      AudioSystem.playSound('fail');
       if (validation.reason === "wrongMatch") {
         window.UIRenderer.shakeBin(scenarioId);
         window.UIRenderer.showHint(validation.hint + " Try again!");
@@ -28,6 +29,7 @@ Object.assign(window.Game, (() => {
     }
     const mat = Game.currentEra.materials.find(m => m.id === materialId);
     window.MatchingEngine.commit(Game.state, materialId, scenarioId);
+    AudioSystem.playSound('success');
     window.UIRenderer.fillBin(scenarioId, mat ? mat.label : materialId);
     window.UIRenderer.showHint(`✅ ${mat ? mat.label : materialId} placed in ${scenarioId}!`);
 

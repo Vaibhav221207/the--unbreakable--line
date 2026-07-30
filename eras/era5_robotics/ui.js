@@ -119,6 +119,7 @@ Object.assign(window.UIRenderer, (() => {
   }
 
   function showPrintSuccess(era, state, scenario) {
+    AudioSystem.playSound('success');
     const resultEl = $("pr-result");
     const printBtn = $("pr-print-btn");
     if (resultEl) {
@@ -134,6 +135,7 @@ Object.assign(window.UIRenderer, (() => {
   }
 
   function showPrintFailure(era, state, scenario, errorParams) {
+    AudioSystem.playSound('fail');
     const resultEl = $("pr-result");
     const printBtn = $("pr-print-btn");
     const hints = scenario.failureHints;

@@ -336,10 +336,11 @@ Object.assign(window.UIRenderer, (() => {
         // Step 2: cable extends down to belt
         setCable(cableToBelt);
 
-        setTimeout(() => {
-          // Step 3: grab — jaws close, material appears
-          closeJaws();
-          matEl.textContent = icon;
+          setTimeout(() => {
+            // Step 3: grab — jaws close, material appears
+            closeJaws();
+            AudioSystem.playSound('whoosh');
+            matEl.textContent = icon;
           matEl.style.opacity = "1";
 
           setTimeout(() => {

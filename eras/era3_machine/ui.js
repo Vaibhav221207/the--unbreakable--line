@@ -179,6 +179,7 @@ Object.assign(window.UIRenderer, (() => {
   function onBridgeBalanced(era, state, scenario) {
     if (state.completed.has(scenario.id)) return;
     state.completed.add(scenario.id);
+    AudioSystem.playSound('success');
     Game.busy = true;
     const info = document.getElementById("scene-info");
     if (info) info.textContent += " ✅ Bridge balanced!";
@@ -422,6 +423,8 @@ Object.assign(window.UIRenderer, (() => {
         slider.value = Math.round(val);
         const lbl = document.getElementById("auto-lever-val-" + adjSide);
         if (lbl) lbl.textContent = Math.round(val) + "m";
+        // Whoosh on first frame of each arm movement
+        if (t < 0.02) AudioSystem.playSound('whoosh');
         // Update bridge arms
         const fill = document.getElementById("auto-arm-fill-" + adjSide);
         if (fill) fill.style.width = (Math.round(val) / adjArm.max * 100) + "%";
